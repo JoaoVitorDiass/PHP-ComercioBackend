@@ -2,6 +2,9 @@
 
     namespace Comercio\Api\models;
 
+    use Comercio\Api\repository\ClienteRepository;
+    use Comercio\Api\utils\Conexao;
+
     use DateTime;
     class Cliente {
 
@@ -103,5 +106,31 @@
         function setEndereco(string $endereco) : void
         {
             $this->_endereco = $endereco;
+        }
+
+        function Buscar(Conexao $conexao): void
+        {
+            $repo = new ClienteRepository();
+            $repo->Obter($this, $conexao);
+        }
+        function BuscarTodos(Conexao $conexao): array
+        {
+            $repo = new ClienteRepository();
+            return $repo->ObterTodos($conexao);
+        }
+        function Adicionar(Conexao $conexao): bool
+        {
+            $repo = new ClienteRepository();
+            return $repo->Adicionar($this, $conexao);
+        }
+        function Alterar(Conexao $conexao): bool
+        {
+            $repo = new ClienteRepository();
+            return $repo->Alterar($this, $conexao);
+        }
+        function Deletar(int $codigoCliente, Conexao $conexao): bool
+        {
+            $repo = new ClienteRepository();
+            return $repo->Deletar($codigoCliente, $conexao);
         }
     }

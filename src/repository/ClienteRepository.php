@@ -7,9 +7,9 @@
     use Exception;
 
     class ClienteRepository {
-        function ObterCliente(int $codigoCliente, Conexao $conexao): ?Cliente
+        
+        function Obter(Cliente $cliente, Conexao $conexao): void
         {
-            $cliente = null;
             try {
                 $sql = "
                     SELECT 
@@ -24,23 +24,21 @@
                     FROM GER_CLIENTE T
                     WHERE N_COD_CLIENTE = ':codigoCliente'
                 ";
-                $sql = str_replace(":codigoCliente", $codigoCliente, $sql);
+                $sql = str_replace(":codigoCliente", $cliente->getCodigo(), $sql);
                 $row = $conexao->buscar($sql);
-                $cliente = new Cliente(
-                    $row["CODIGO"],
-                    $row["NOME"],
-                    $row["CPF"],
-                    $row["DATA_NASCIMENTO"],
-                    $row["TELEFONE"],
-                    $row["RG"],
-                    $row["EMAIL"],
-                    $row["ENDERECO"],
-                );
+
+                $cliente->setCodigo($row["CODIGO"]);
+                $cliente->setNome($row["NOME"]);
+                $cliente->setCpf($row["CPF"]);
+                $cliente->setDataNascimento($row["DATA_NASCIMENTO"]);
+                $cliente->setTelefone($row["TELEFONE"]);
+                $cliente->setRg($row["RG"]);
+                $cliente->setEmail($row["EMAIL"]);
+                $cliente->setEndereco($row["ENDERECO"]);
             }
             catch ( Exception $e) {
                 throw new Exception($e->getMessage());
             }
-            return $cliente;
         }
         function ObterTodos(Conexao $conexao): array
         {

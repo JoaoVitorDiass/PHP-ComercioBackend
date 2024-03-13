@@ -4,6 +4,10 @@
 
     use Comercio\Api\models\Fornecedor;
 
+    use Comercio\Api\repository\ProdutoRepository;
+
+    use Comercio\Api\utils\Conexao;
+
     class Produto {
 
         private int $_codigo;
@@ -96,4 +100,32 @@
             $this->_fornecedor = $fornecedor;
         }
 
+
+
+
+        function Buscar(Conexao $conexao): void
+        {
+            $repo = new ProdutoRepository();
+            $repo->Obter($this, $conexao);
+        }
+        function BuscarTodos(Conexao $conexao): array
+        {
+            $repo = new ProdutoRepository();
+            return $repo->ObterTodos($conexao);
+        }
+        function Adicionar(Conexao $conexao): bool
+        {
+            $repo = new ProdutoRepository();
+            return $repo->Adicionar($this, $conexao);
+        }
+        function Alterar(Conexao $conexao): bool
+        {
+            $repo = new ProdutoRepository();
+            return $repo->Alterar($this, $conexao);
+        }
+        function Deletar(int $codigoVenda, Conexao $conexao): bool
+        {
+            $repo = new ProdutoRepository();
+            return $repo->Deletar($codigoVenda, $conexao);
+        }
     }

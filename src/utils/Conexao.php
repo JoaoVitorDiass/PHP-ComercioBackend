@@ -9,7 +9,7 @@
 
         public function __construct()
         {
-            $this->conn = oci_connect('JOAO', '147147', '192.168.1.100/XE', 'AL32UTF8');
+            $this->conn = oci_connect('262113651', '262113651', '177.131.33.17/XE', 'AL32UTF8');
 
             if (!$this->conn) {
                 $erro = oci_error();
@@ -18,7 +18,7 @@
         }
         public function abrirConexao()
         {
-            $this->conn = oci_connect('JOAO', '147147', '192.168.1.100/XE', 'AL32UTF8');
+            $this->conn = oci_connect('262113651', '262113651', '177.131.33.17/XE', 'AL32UTF8');
 
             if (!$this->conn) {
                 $erro = oci_error();

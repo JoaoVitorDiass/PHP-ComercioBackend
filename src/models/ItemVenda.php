@@ -7,28 +7,24 @@
 
     class ItemVenda {
         private int $_codigo;
-        private Venda $_venda;
-        private Produto $_produto;
+        private ?Venda $_venda;
+        private ?Produto $_produto;
         private int $_quantidade;
-        private float $_valorTotalItem;
 
         /**
          * @param int $codigo
          * @param Venda $venda
          * @param Produto $produto
          * @param int $quantidade
-         * @param float $valorTotalItem
          */
-        function __construct(   int $codigo,
-                                Venda $venda,
-                                Produto $produto,
-                                int $quantidade,
-                                float $valorTotalItem ) {
+        function __construct(   int $codigo=0,
+                                Venda $venda=null,
+                                Produto $produto=null,
+                                int $quantidade=0 ) {
             $this->_codigo = $codigo;
             $this->_venda = $venda;
             $this->_produto = $produto;
             $this->_quantidade = $quantidade;
-            $this->_valorTotalItem = $valorTotalItem;
         }
         function getCodigo() : int
         {
@@ -62,12 +58,5 @@
         {
             $this->_quantidade = $quantidade;
         }
-        function getValorTotalItem() : float
-        {
-            return $this->_valorTotalItem;
-        }
-        function setValorTotalItem(float $valorTotalItem) : void
-        {
-            $this->_valorTotalItem = $valorTotalItem;
-        }
+        
     }

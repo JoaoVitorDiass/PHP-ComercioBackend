@@ -4,23 +4,30 @@
 
     use Comercio\Api\models\Cliente;
     use Comercio\Api\models\ItemVenda;
+    use Comercio\Api\repository\VendaRepository;
+
+    use Comercio\Api\utils\Conexao;
 
     class Venda {
         private int $_codigo;
         private ?Cliente $_cliente;
+        private float $_valorTotal;
         private array $_itensVenda;
         
 
         /**
          * @param int $codigo
          * @param Cliente $cliente
+         * @param float $valorTotal
          * @param ItemVenda[] $itensVenda
          */
         function __construct(   int $codigo=0,
                                 Cliente $cliente=null,
+                                float $valorTotal=0,
                                 array $itensVenda=array() ) {
             $this->_codigo = $codigo;
             $this->_cliente = $cliente;
+            $this->_valorTotal = $valorTotal;
             $this->_itensVenda = $itensVenda;
         }
 
@@ -40,6 +47,14 @@
         {
             $this->_cliente = $cliente;
         }
+        function getValorTotal() : float
+        {
+            return $this->_valorTotal;
+        }
+        function setValorTotal(float $valorTotal) : void
+        {
+            $this->_valorTotal = $valorTotal;
+        }
         function getItensVenda() : array
         {
             return $this->_itensVenda;
@@ -51,5 +66,31 @@
         function addItensVenda(ItemVenda $itemVenda) : void
         {
             array_push($this->_itensVenda, $itemVenda);
+        }
+
+        function Buscar(Conexao $conexao): void
+        {
+            $repo = new VendaRepository();
+            $repo->Obter($this, $conexao);
+        }
+        function BuscarTodos(Conexao $conexao): array
+        {
+            $repo = new VendaRepository();
+            return $repo->ObterTodos($conexao);
+        }
+        function Adicionar(Conexao $conexao): bool
+        {
+            $repo = new VendaRepository();
+            return $repo->Adicionar($this, $conexao);
+        }
+        function Alterar(Conexao $conexao): bool
+        {
+            $repo = new VendaRepository();
+            return $repo->Alterar($this, $conexao);
+        }
+        function Deletar(int $codigoVenda, Conexao $conexao): bool
+        {
+            $repo = new VendaRepository();
+            return $repo->Deletar($codigoVenda, $conexao);
         }
     }
