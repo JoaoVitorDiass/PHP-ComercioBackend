@@ -1,0 +1,19 @@
+-- Create table
+create table GER_VENDA_X_PRODUTO
+(
+  n_cod_venda_x_produto number,
+  n_cod_venda           number,
+  n_cod_produto         number
+)
+;
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table GER_VENDA_X_PRODUTO
+  add constraint PK_GER_VENDA_X_PRODUTO primary key (N_COD_VENDA_X_PRODUTO);
+alter table GER_VENDA_X_PRODUTO
+  add constraint FK_GER_VENDA_X_PRODUTO_01 foreign key (N_COD_VENDA)
+  references ger_venda (N_COD_VENDA);
+alter table GER_VENDA_X_PRODUTO
+  add constraint FK_GER_VENDA_X_PRODUTO_02 foreign key (N_COD_PRODUTO)
+  references ger_produto (N_COD_PRODUTO);
+alter table GER_VENDA_X_PRODUTO
+  add constraint UK_GER_VENDA_X_PRODUTO_01 unique (N_COD_VENDA, N_COD_PRODUTO);

@@ -1,0 +1,11 @@
+-- Create table
+create table GER_USUARIO
+(
+  n_cod_usuario number,
+  c_login       varchar2(100),
+  c_senha       varchar2(100)
+)
+;
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table GER_USUARIO
+  add constraint PK_GER_USUARIO primary key (N_COD_USUARIO);

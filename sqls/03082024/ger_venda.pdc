@@ -1,0 +1,14 @@
+-- Create table
+create table GER_VENDA
+(
+  n_cod_venda   number,
+  n_cod_cliente number,
+  v_vlr_total   number
+)
+;
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table GER_VENDA
+  add constraint PK_GER_VENDA primary key (N_COD_VENDA);
+alter table GER_VENDA
+  add constraint FK_GER_VENDA_01 foreign key (N_COD_CLIENTE)
+  references ger_cliente (N_COD_CLIENTE);

@@ -1,0 +1,22 @@
+-- Create table
+create table GER_FORNECEDOR
+(
+  n_cod_fornecedor NUMBER not null,
+  c_nome           VARCHAR2(1000),
+  c_cpnj           VARCHAR2(20),
+  c_endereco       VARCHAR2(1000),
+  c_telefone       VARCHAR2(16),
+  c_email          VARCHAR2(1000)
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255;
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table GER_FORNECEDOR
+  add constraint PK_GER_FORNECEDOR primary key (N_COD_FORNECEDOR)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255;

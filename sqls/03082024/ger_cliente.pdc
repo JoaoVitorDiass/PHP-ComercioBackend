@@ -1,0 +1,16 @@
+-- Create table
+create table GER_CLIENTE
+(
+  n_cod_cliente number,
+  c_nome        varchar2(1000),
+  c_cpf         varchar2(14),
+  d_nascimento  date,
+  c_telefone    varchar2(16),
+  c_rg          varchar2(14),
+  c_email       varchar2(100),
+  c_endereco    varchar2(1000)
+)
+;
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table GER_CLIENTE
+  add constraint PK_GER_CLIENTE primary key (N_COD_CLIENTE);

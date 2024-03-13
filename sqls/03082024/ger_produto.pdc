@@ -1,0 +1,18 @@
+-- Create table
+create table GER_PRODUTO
+(
+  n_cod_produto    number,
+  n_cod_fornecedor number,
+  c_descricao      varchar2(1000),
+  v_vlr_custo      number,
+  v_vlr_venda      number,
+  n_qtd_estoque    number,
+  n_estoque_minimo number
+)
+;
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table GER_PRODUTO
+  add constraint PK_GER_PRODUTO primary key (N_COD_PRODUTO);
+alter table GER_PRODUTO
+  add constraint FK_GER_PRODUTO_01 foreign key (N_COD_FORNECEDOR)
+  references ger_fornecedor (N_COD_FORNECEDOR);

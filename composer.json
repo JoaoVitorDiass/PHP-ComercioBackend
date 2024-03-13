@@ -1,0 +1,16 @@
+{
+    "name": "comercio/api",
+    "description": "API voltada ao controle de um comercio",
+    "autoload": {
+        "psr-4": {
+            "Comercio\\Api\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "JoaoVitorDiass",
+            "email": "joovitordiasdasilva@gmail.com"
+        }
+    ],
+    "require": {}
+}

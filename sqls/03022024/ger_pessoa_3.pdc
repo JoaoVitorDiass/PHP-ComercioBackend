@@ -1,0 +1,2 @@
+-- Add/modify columns 
+alter table GER_PESSOA rename column c_rg to N_RG;

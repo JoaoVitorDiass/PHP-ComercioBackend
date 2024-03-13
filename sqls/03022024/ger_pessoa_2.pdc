@@ -1,0 +1,2 @@
+-- Add/modify columns 
+alter table GER_PESSOA rename column dt_nascimento to D_NASCIMENTO;
