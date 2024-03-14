@@ -46,6 +46,9 @@
                 ";
                 $sql = str_replace(":login", $login, $sql);
                 $row = $conexao->buscar($sql);
+
+                
+
                 if($row["CONTADOR"] > 0) {
                     $sql = "
                         SELECT 

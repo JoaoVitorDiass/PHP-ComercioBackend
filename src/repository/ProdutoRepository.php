@@ -22,17 +22,17 @@
                         N_QTD_ESTOQUE     AS QUANTIDADE_ESTOQUE,
                         N_ESTOQUE_MINIMO  AS ESTOQUE_MINIMO
                     FROM GER_PRODUTO
-                    WHERE N_COD_USUARIO = ':codigoProduto'
+                    WHERE N_COD_PRODUTO = ':codigoProduto'
                 ";
                 $sql = str_replace(":codigoProduto", $produto->getCodigo(), $sql);
                 $row = $conexao->buscar($sql);
 
                 $produto->setCodigo($row["CODIGO"]);
                 $produto->setDescricao($row["DESCRICAO"]);
-                $produto->setValorCusto($row["VALOR_CUSTO"]);
-                $produto->setValorVenda($row["VALOR_VENDA"]);
-                $produto->setQuantidadeEstoque($row["QUANTIDADE_ESTOQUE"]);
-                $produto->setEstoqueMinimo($row["ESTOQUE_MINIMO"]);
+                (float)$produto->setValorCusto($row["VALOR_CUSTO"]);
+                (float)$produto->setValorVenda($row["VALOR_VENDA"]);
+                (int)$produto->setQuantidadeEstoque($row["QUANTIDADE_ESTOQUE"]);
+                (int)$produto->setEstoqueMinimo($row["ESTOQUE_MINIMO"]);
                 $produto->setFornecedor(new Fornecedor($row["CODIGO_FORNECEDOR"]));
             }
             catch ( Exception $e) {
@@ -53,16 +53,17 @@
                         N_QTD_ESTOQUE     AS QUANTIDADE_ESTOQUE,
                         N_ESTOQUE_MINIMO  AS ESTOQUE_MINIMO
                     FROM GER_PRODUTO
+                    ORDER BY N_COD_PRODUTO DESC
                 ";
                 $rows = $conexao->buscarTodos($sql);
                 foreach($rows as $row) {
                     $produto = new Produto(
                         $row["CODIGO"],
                         $row["DESCRICAO"],
-                        $row["VALOR_CUSTO"],
-                        $row["VALOR_VENDA"],
-                        $row["QUANTIDADE_ESTOQUE"],
-                        $row["ESTOQUE_MINIMO"],
+                        (float)$row["VALOR_CUSTO"],
+                        (float)$row["VALOR_VENDA"],
+                        (int)$row["QUANTIDADE_ESTOQUE"],
+                        (int)$row["ESTOQUE_MINIMO"],
                         new Fornecedor($row["CODIGO_FORNECEDOR"]),
                     );
                     array_push($arr, $produto);

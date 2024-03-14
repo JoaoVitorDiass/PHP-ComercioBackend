@@ -21,15 +21,15 @@
 
         /**
          * @param int $codigo
-         * @param int $descricao
+         * @param string $descricao
          * @param float $valorCusto
          * @param float $valorVenda
          * @param int $quantidadeEstoque
          * @param int $estoqueMinimo
-         * @param Fornecedor $fornecedor
+         * @param ?Fornecedor $fornecedor
          */
         function __construct(   int $codigo=0,
-                                int $descricao=0,
+                                string $descricao="",
                                 float $valorCusto=0,
                                 float $valorVenda=0,
                                 int $quantidadeEstoque=0,
