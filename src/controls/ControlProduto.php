@@ -65,12 +65,13 @@
             }
             else {
                 $retorno['menssage'][] = "Listando produtos ...";
+
                 foreach($produtos as $produto) {
                     $retorno['data'][] = [
                         "codigo" => $produto->getCodigo(),
                         "descricao"=> $produto->getDescricao(),
-                        "valorCusto" => $produto->getValorCusto(),
-                        "valorVenda" => $produto->getValorVenda(),
+                        "valorCusto" => number_format($produto->getValorCusto(),2,",","."),
+                        "valorVenda" => number_format($produto->getValorVenda(),2,",","."),
                         "quantidadeEstoque" => $produto->getQuantidadeEstoque(),
                         "estoqueMinimo" => $produto->getEstoqueMinimo(),
                         "codigoFornecedor" => $produto->getFornecedor()->getCodigo()
@@ -91,22 +92,19 @@
     }
     function Adicionar($data) {
         $retorno = Funcoes::getRetorno();
-
         try {
             $produto = new Produto(
                 0,
                 $data["descricao"],
-                $data["valorCusto"],
-                $data["valorVenda"],
+                (float)str_replace(',', '.', str_replace('.', '', $data["valorCusto"])),
+                (float)str_replace(',', '.', str_replace('.', '', $data["valorVenda"])),
                 $data["quantidadeEstoque"],
                 $data["estoqueMinimo"],
                 new Fornecedor($data["codigoFornecedor"])
             );
-
             $conexao = Singleton::getConexao();
             $success = $produto->Adicionar($conexao);
             Singleton::fecharConexao();
-
             if($success) {
                 http_response_code(201);
             }
@@ -197,7 +195,10 @@
         break;
 
         case "POST":
-            echo Adicionar($_POST);
+            if($_POST != array())
+                echo Adicionar($_POST);
+            else
+                echo Adicionar(Funcoes::getPatchData());
         break;
 
         case "DELETE":

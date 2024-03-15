@@ -90,9 +90,9 @@
                     VALUES
                         (SEQ_GER_PRODUTO.NEXTVAL,
                         ':codigoFornecedor',
-                        ':descricao',
-                        ':valorCusto',
-                        ':valorVenda',
+                        UPPER(':descricao'),
+                        :valorCusto,
+                        :valorVenda,
                         ':quantidadeEstoque',
                         ':estoqueMinimo')
                 ";
