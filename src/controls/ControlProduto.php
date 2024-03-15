@@ -11,7 +11,7 @@
     use Exception;
 
     header("Access-Control-Allow-Origin: *");
-    header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+    header("Access-Control-Allow-Methods: POST, GET, PATCH, DELETE, PUT, OPTIONS");
     header("Access-Control-Allow-Headers: Content-Type");
 
     function buscar($codigoProduto) {
@@ -89,7 +89,6 @@
         header('Content-Type: Application/json');
         return json_encode($retorno);
     }
-
     function Adicionar($data) {
         $retorno = Funcoes::getRetorno();
 
@@ -124,6 +123,64 @@
         header('Content-Type: Application/json');
         return json_encode($retorno);
     }
+    function Alterar($data) {
+        $retorno = Funcoes::getRetorno();
+        try {
+            $produto = new Produto(
+                $data["codigo"],
+                $data["descricao"],
+                $data["valorCusto"],
+                $data["valorVenda"],
+                $data["quantidadeEstoque"],
+                $data["estoqueMinimo"],
+                new Fornecedor($data["codigoFornecedor"])
+            );
+
+            $conexao = Singleton::getConexao();
+            $success = $produto->Alterar($conexao);
+            Singleton::fecharConexao();
+
+            if($success) {
+                http_response_code(202);
+            }
+            else {
+                throw new Exception("Erro ao alterar o produto ...");
+            }
+        }
+        catch (Exception $e)
+        {
+            $retorno['error'] = true;
+            $retorno['mensage'][] = $e->getMessage();
+            http_response_code(400);
+        }
+        header('Content-Type: Application/json');
+        return json_encode($retorno);
+    }
+    function Deletar($codigoProduto) {
+        $retorno = Funcoes::getRetorno();
+        try {
+            $produto = new Produto();
+
+            $conexao = Singleton::getConexao();
+            $success = $produto->Deletar($codigoProduto, $conexao);
+            Singleton::fecharConexao();
+            
+            if($success) {
+                http_response_code(200);
+            }
+            else {
+                throw new Exception("Erro ao alterar o usuário ...");
+            }
+        }
+        catch (Exception $e)
+        {
+            $retorno['error'] = true;
+            $retorno['mensage'][] = $e->getMessage();
+            http_response_code(400);
+        }
+        header('Content-Type: Application/json');
+        return json_encode($retorno);
+    }
 
     switch($_SERVER["REQUEST_METHOD"]){
         case "GET":
@@ -144,11 +201,13 @@
         break;
 
         case "DELETE":
+            echo Deletar($_GET["codigo"]);
             break;
 
         case "PUT":
             break;
 
         case "PATCH":
+            echo Alterar(Funcoes::getPatchData());
             break;
     }
