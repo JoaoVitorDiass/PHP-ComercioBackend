@@ -200,7 +200,7 @@
             if($_POST != array())
                 echo Adicionar($_POST);
             else
-                echo Adicionar(Funcoes::getPatchData());
+                echo Adicionar(Funcoes::getData());
         break;
 
         case "DELETE":
