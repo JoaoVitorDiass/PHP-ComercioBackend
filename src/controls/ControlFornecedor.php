@@ -1,9 +1,10 @@
 <?php
 
-    namespace Comercio\Api\constrols;
+    namespace Comercio\Api\Controls;
+
     require_once "../../vendor/autoload.php";
 
-    use Comercio\Api\models\Usuario;
+    use Comercio\Api\models\Fornecedor;
     use Comercio\Api\utils\Singleton;
     use Comercio\Api\utils\Funcoes;
     use Exception;
@@ -12,22 +13,30 @@
     header("Access-Control-Allow-Methods: POST, GET, PATCH, DELETE, PUT, OPTIONS");
     header("Access-Control-Allow-Headers: Content-Type");
 
-    error_reporting(0);
+    // error_reporting(0);
 
-    function Buscar($codigoUsuario) {
+    function buscar($codigoFornecedor) {
+
         $retorno = Funcoes::getRetorno();
         try {
-            $usuario = new Usuario();
+            $fornecedor = new Fornecedor($codigoFornecedor);
             
             $conexao = Singleton::getConexao();
-            $usuario = $usuario->BuscarUsuario($codigoUsuario,$conexao);
+            $fornecedor->Buscar($conexao);
             Singleton::fecharConexao();
-
-            if($usuario != null) {
-                $retorno['menssage'][]= "Sucesso";
-                $retorno['data'] = [
-                    "codigo" => $usuario->getCodigo(),
-                    "login" => $usuario->getLogin()
+            
+            if($fornecedor == array()) {
+                $retorno['menssage'][] = "Fornecedor não encontrado!";
+            }
+            else {
+                $retorno['menssage'][] = "Listando fornecedor ...";
+                $retorno['data'][] = [
+                    "codigo" => $fornecedor->getCodigo(),
+                    "nome"=> $fornecedor->getNome(),
+                    "cnpj" => $fornecedor->getCnpj(),
+                    "endereco" => $fornecedor->getEndereco(),
+                    "telefone" => $fornecedor->getTelefone(),
+                    "email" => $fornecedor->getEmail(),
                 ];
             }
             http_response_code(200);
@@ -35,58 +44,72 @@
         catch (Exception $e)
         {
             $retorno['error'] = true;
-            $retorno['mensage'][] = $e->getMessage();
+            $retorno['menssage'][] = $e->getMessage();
             http_response_code(400);
         }
         header('Content-Type: Application/json');
         return json_encode($retorno);
     }
-    function BuscarTodos() {
+    function buscarTodos() {
 
         $retorno = Funcoes::getRetorno();
         try {
-            $usuario = new Usuario();
+            $fornecedor = new Fornecedor();
             
             $conexao = Singleton::getConexao();
-            $usuarios = $usuario->BuscarTodos($conexao);
+            $fornecedores = $fornecedor->BuscarTodos($conexao);
             Singleton::fecharConexao();
-
-            if($usuarios != array()) {
-                $retorno["menssage"][] = "Sucesso";
-                foreach($usuarios as $usuario) {
-                    $retorno["data"][] = [
-                        "codigo" => $usuario->getCodigo(),
-                        "login" => $usuario->getLogin()
+            
+            if($fornecedores == array()) {
+                $retorno['menssage'][] = "Não há fornecedores cadastrados!";
+            }
+            else {
+                $retorno['menssage'][] = "Listando fornecedores ...";
+                foreach($fornecedores as $fornecedor) {
+                    $retorno['data'][] = [
+                        "codigo" => $fornecedor->getCodigo(),
+                        "nome"=> $fornecedor->getNome(),
+                        "cnpj" => $fornecedor->getCnpj(),
+                        "endereco" => $fornecedor->getEndereco(),
+                        "telefone" => $fornecedor->getTelefone(),
+                        "email" => $fornecedor->getEmail(),
                     ];
                 }
             }
+            
             http_response_code(200);
         }
         catch (Exception $e)
         {
             $retorno['error'] = true;
-            $retorno['mensage'][] = $e->getMessage();
+            $retorno['menssage'][] = $e->getMessage();
             http_response_code(400);
         }
         header('Content-Type: Application/json');
         return json_encode($retorno);
     }
-    function Adicionar( $login, $senha ) {
+    function Adicionar($data) {
         $retorno = Funcoes::getRetorno();
+
         try {
-            $usuario = new Usuario();
-            $usuario->setLogin($login);
-            $usuario->setSenha(base64_encode($senha));
+            $fornecedor = new Fornecedor(
+                0,
+                $data["nome"],
+                $data["cnpj"],
+                $data["telefone"],
+                $data["email"],
+                $data["endereco"],
+            );
 
             $conexao = Singleton::getConexao();
-            $success = $usuario->Adicionar($conexao);
+            $success = $fornecedor->Adicionar($conexao);
             Singleton::fecharConexao();
 
             if($success) {
                 http_response_code(201);
             }
             else {
-                throw new Exception("Erro ao adicionar o usuário ...");
+                throw new Exception("Erro ao adicionar o produto ...");
             }
         }
         catch (Exception $e)
@@ -101,20 +124,24 @@
     function Alterar($data) {
         $retorno = Funcoes::getRetorno();
         try {
-            $usuario = new Usuario();
-            $usuario->setCodigo($data["codigo"]);
-            $usuario->setLogin($data["login"]);
-            $usuario->setSenha(base64_encode($data["senha"]));
+            $fornecedor = new Fornecedor(
+                $data["codigo"],
+                $data["nome"],
+                $data["cnpj"],
+                $data["telefone"],
+                $data["email"],
+                $data["endereco"],
+            );
 
             $conexao = Singleton::getConexao();
-            $success = $usuario->Alterar($conexao);
+            $success = $fornecedor->Alterar($conexao);
             Singleton::fecharConexao();
 
             if($success) {
                 http_response_code(202);
             }
             else {
-                throw new Exception("Erro ao alterar o usuário ...");
+                throw new Exception("Erro ao alterar o produto ...");
             }
         }
         catch (Exception $e)
@@ -126,13 +153,13 @@
         header('Content-Type: Application/json');
         return json_encode($retorno);
     }
-    function Deletar($codigoUsuario) {
+    function Deletar($codigoFornecedor) {
         $retorno = Funcoes::getRetorno();
         try {
-            $usuario = new Usuario();
+            $fornecedor = new Fornecedor();
 
             $conexao = Singleton::getConexao();
-            $success = $usuario->Deletar($codigoUsuario, $conexao);
+            $success = $fornecedor->Deletar($codigoFornecedor, $conexao);
             Singleton::fecharConexao();
             
             if($success) {
@@ -157,7 +184,7 @@
             if(isset($_GET["funcao"])) {
                 switch($_GET["funcao"]) {
                     case "buscar": 
-                        echo Buscar($_GET["codigoUsuario"]);
+                        echo Buscar($_GET["codigoFornecedor"]);
                         break;
                     case "buscarTodos":
                         echo BuscarTodos();
@@ -167,8 +194,7 @@
         break;
 
         case "POST":
-            $data = Funcoes::getData();
-            echo Adicionar($data["login"], $data["senha"]);
+            echo Adicionar(Funcoes::getData());
         break;
 
         case "DELETE":
@@ -181,5 +207,4 @@
         case "PATCH":
             echo Alterar(Funcoes::getData());
             break;
-
     }

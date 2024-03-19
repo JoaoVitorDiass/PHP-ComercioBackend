@@ -13,6 +13,8 @@
     header("Access-Control-Allow-Methods: POST, GET, PATCH, DELETE, PUT, OPTIONS");
     header("Access-Control-Allow-Headers: Content-Type");
 
+    error_reporting(0);
+
     function ValidaLogin($login, $senha) {
 
         $retorno = Funcoes::getRetorno();

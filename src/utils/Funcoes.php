@@ -11,7 +11,7 @@
                 'data' => [] 
             ];
         }
-        static function getPatchData() {
+        static function getData() {
             // Inicializa variável para armazenar os dados
             $data = array();
             // Verifica se a requisição é PATCH e o corpo da requisição contém dados

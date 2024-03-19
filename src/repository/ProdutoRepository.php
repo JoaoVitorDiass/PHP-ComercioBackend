@@ -29,10 +29,10 @@
 
                 $produto->setCodigo($row["CODIGO"]);
                 $produto->setDescricao($row["DESCRICAO"]);
-                (float)$produto->setValorCusto($row["VALOR_CUSTO"]);
-                (float)$produto->setValorVenda($row["VALOR_VENDA"]);
-                (int)$produto->setQuantidadeEstoque($row["QUANTIDADE_ESTOQUE"]);
-                (int)$produto->setEstoqueMinimo($row["ESTOQUE_MINIMO"]);
+                $produto->setValorCusto((float)str_replace(",",".",str_replace(".","",$row["VALOR_CUSTO"])));
+                $produto->setValorVenda((float)str_replace(",",".",str_replace(".","",$row["VALOR_VENDA"])));
+                $produto->setQuantidadeEstoque($row["QUANTIDADE_ESTOQUE"]);
+                $produto->setEstoqueMinimo($row["ESTOQUE_MINIMO"]);
                 $produto->setFornecedor(new Fornecedor($row["CODIGO_FORNECEDOR"]));
             }
             catch ( Exception $e) {
@@ -60,10 +60,10 @@
                     $produto = new Produto(
                         $row["CODIGO"],
                         $row["DESCRICAO"],
-                        (float)$row["VALOR_CUSTO"],
-                        (float)$row["VALOR_VENDA"],
-                        (int)$row["QUANTIDADE_ESTOQUE"],
-                        (int)$row["ESTOQUE_MINIMO"],
+                        (float)str_replace(",",".",str_replace(".","",$row["VALOR_CUSTO"])),
+                        (float)str_replace(",",".",str_replace(".","",$row["VALOR_VENDA"])),
+                        $row["QUANTIDADE_ESTOQUE"],
+                        $row["ESTOQUE_MINIMO"],
                         new Fornecedor($row["CODIGO_FORNECEDOR"]),
                     );
                     array_push($arr, $produto);
@@ -98,8 +98,8 @@
                 ";
                 $sql = str_replace(":codigoFornecedor", $produto->getFornecedor()->getCodigo(), $sql);
                 $sql = str_replace(":descricao", $produto->getDescricao(), $sql);
-                $sql = str_replace(":valorCusto", $produto->getValorCusto(), $sql);
-                $sql = str_replace(":valorVenda", $produto->getValorVenda(), $sql);
+                $sql = str_replace(":valorCusto", str_replace(".",",",$produto->getValorCusto()), $sql);
+                $sql = str_replace(":valorVenda", str_replace(".",",",$produto->getValorVenda()), $sql);
                 $sql = str_replace(":quantidadeEstoque", $produto->getQuantidadeEstoque(), $sql);
                 $sql = str_replace(":estoqueMinimo", $produto->getEstoqueMinimo(), $sql);
                 $success = $conexao->executar($sql);
@@ -126,8 +126,8 @@
 
                 $sql = str_replace(":codigoFornecedor", $produto->getFornecedor()->getCodigo(), $sql);
                 $sql = str_replace(":descricao", $produto->getDescricao(), $sql);
-                $sql = str_replace(":valorCusto", $produto->getValorCusto(), $sql);
-                $sql = str_replace(":valorVenda", $produto->getValorVenda(), $sql);
+                $sql = str_replace(":valorCusto", str_replace(".",",",$produto->getValorCusto()), $sql);
+                $sql = str_replace(":valorVenda", str_replace(".",",",$produto->getValorVenda()), $sql);
                 $sql = str_replace(":quantidadeEstoque", $produto->getQuantidadeEstoque(), $sql);
                 $sql = str_replace(":estoqueMinimo", $produto->getEstoqueMinimo(), $sql);
                 $sql = str_replace(":codigoProduto", $produto->getCodigo(), $sql);

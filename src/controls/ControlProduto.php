@@ -14,6 +14,8 @@
     header("Access-Control-Allow-Methods: POST, GET, PATCH, DELETE, PUT, OPTIONS");
     header("Access-Control-Allow-Headers: Content-Type");
 
+    error_reporting(0);
+
     function buscar($codigoProduto) {
 
         $retorno = Funcoes::getRetorno();
@@ -197,7 +199,7 @@
         break;
 
         case "POST":
-            echo Adicionar($_POST);
+            echo Adicionar(Funcoes::getData());
         break;
 
         case "DELETE":
@@ -208,6 +210,6 @@
             break;
 
         case "PATCH":
-            echo Alterar(Funcoes::getPatchData());
+            echo Alterar(Funcoes::getData());
             break;
     }

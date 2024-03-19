@@ -2,6 +2,9 @@
 
 namespace Comercio\Api\models;
 
+use Comercio\Api\repository\FornecedorRepository;
+use Comercio\Api\utils\Conexao;
+
 class Fornecedor {
 
     private int $_codigo;
@@ -44,7 +47,7 @@ class Fornecedor {
     {
         return $this->_nome;
     }
-    function setNome(int $nomePessoa) : void
+    function setNome(string $nomePessoa) : void
     {
         $this->_nomePessoa = $nomePessoa;
     }
@@ -80,5 +83,29 @@ class Fornecedor {
     {
         $this->_endereco = $endereco;
     }
-
+    function Buscar(Conexao $conexao): void
+    {
+        $repo = new FornecedorRepository();
+        $repo->Obter($this, $conexao);
+    }
+    function BuscarTodos(Conexao $conexao): array
+    {
+        $repo = new FornecedorRepository();
+        return $repo->ObterTodos($conexao);
+    }
+    function Adicionar(Conexao $conexao): bool
+    {
+        $repo = new FornecedorRepository();
+        return $repo->Adicionar($this, $conexao);
+    }
+    function Alterar(Conexao $conexao): bool
+    {
+        $repo = new FornecedorRepository();
+        return $repo->Alterar($this, $conexao);
+    }
+    function Deletar(int $codigoCliente, Conexao $conexao): bool
+    {
+        $repo = new FornecedorRepository();
+        return $repo->Deletar($codigoCliente, $conexao);
+    }
 }
