@@ -10,12 +10,12 @@
 
     use Exception;
     class ItemVendaRepository {
-        function ObterItemVendaByVenda(Venda $venda, Conexao $conexao): ?ItemVenda
+        function ObterTodosByVenda(Venda $venda, Conexao $conexao): void
         {
             try {
                 $sql = "
                     SELECT
-                        N_COD_VENDA_X_PRODUTO AS CODIGO
+                        N_COD_VENDA_X_PRODUTO AS CODIGO,
                         N_COD_VENDA           AS CODIGO_VENDA,    
                         N_COD_PRODUTO         AS CODIGO_PRODUTO,
                         N_QUANTIDADE          AS QUANTIDADE

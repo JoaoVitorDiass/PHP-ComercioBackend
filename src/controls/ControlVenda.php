@@ -5,7 +5,7 @@
     require_once "../../vendor/autoload.php";
     
     use Comercio\Api\models\Venda;
-    use Comercio\Api\models\Produto;
+    use Comercio\Api\models\ItemVenda;
     use Comercio\Api\utils\Singleton;
     use Comercio\Api\utils\Funcoes;
     use Exception;
@@ -21,6 +21,7 @@
         $retorno = Funcoes::getRetorno();
         try {
             $venda = new Venda($codigoVenda);
+            $itemVenda = new ItemVenda();
             
             $conexao = Singleton::getConexao();
             $venda->Buscar($conexao);
@@ -30,9 +31,18 @@
                 $retorno['menssage'][] = "Venda não encontrada!";
             }
             else {
+
+                $conexao = Singleton::getConexao();
+                $itemVenda->BuscarTodosByVenda($venda, $conexao);
+                Singleton::fecharConexao();
+
                 $produtos = array();
                 foreach( $venda->getItensVenda() as &$itemVenda) {
-                    $itemVenda->getProduto()->Buscar();
+
+                    $conexao = Singleton::getConexao();
+                    $itemVenda->getProduto()->Buscar($conexao);
+                    Singleton::fecharConexao();
+
                     $produtos[] = [
                         "codigo"             => $itemVenda->getProduto()->getCodigo(),
                         "descricao"          => $itemVenda->getProduto()->getDescricao(),

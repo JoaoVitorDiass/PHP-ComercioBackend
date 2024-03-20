@@ -24,7 +24,8 @@
                 ";
                 $sql = str_replace(":codigoVenda", $venda->getCodigo(), $sql);
                 $row = $conexao->buscar($sql);
-
+                
+                
                 $venda->setCliente(new Cliente($row["CODIGO_CLIENTE"]));
                 $venda->setValorTotal($row["VALOR_TOTAL"]);
             }

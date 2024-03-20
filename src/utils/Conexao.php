@@ -72,11 +72,14 @@
                     throw new Exception("Erro ao executar a query: " . $erro['message']);
                 }
 
+                // if( oci_num_rows($stmt) == 0 ) {
+                //     throw new Exception("Dados não encontrados");
+                // }
+
                 $row = oci_fetch_assoc($stmt);
                 oci_free_statement($stmt);
 
                 return $row;
-
             }
             catch(Exception $e) {
                 throw new Exception($e->getMessage());

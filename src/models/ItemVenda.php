@@ -4,7 +4,8 @@
 
     use Comercio\Api\models\Venda;
     use Comercio\Api\models\Produto;
-
+    use Comercio\Api\repository\ItemVendaRepository;
+    use Comercio\Api\utils\Conexao;
     class ItemVenda {
         private int $_codigo;
         private ?Venda $_venda;
@@ -59,4 +60,9 @@
             $this->_quantidade = $quantidade;
         }
         
+        function BuscarTodosByVenda(Venda $venda, Conexao $conexao): void
+        {
+            $repo = new ItemVendaRepository();
+            $repo->ObterTodosByVenda($venda, $conexao);
+        }
     }
