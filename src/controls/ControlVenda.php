@@ -42,7 +42,6 @@
                     $conexao = Singleton::getConexao();
                     $itemVenda->getProduto()->Buscar($conexao);
                     Singleton::fecharConexao();
-
                     $produtos[] = [
                         "codigo"             => $itemVenda->getProduto()->getCodigo(),
                         "descricao"          => $itemVenda->getProduto()->getDescricao(),
@@ -57,7 +56,7 @@
                 $retorno['data'][] = [
                     "codigo" => $venda->getCodigo(),
                     "codigoCliente"=> $venda->getCliente()->getCodigo(),
-                    "valorTotal" => $venda->getValorTotal(),
+                    "valorTotal" => (float)$venda->getValorTotal(),
                     "items" => $produtos,
                 ];
             }

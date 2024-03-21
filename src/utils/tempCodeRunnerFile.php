@@ -1,0 +1,2 @@
+<?php
+oci_connect
