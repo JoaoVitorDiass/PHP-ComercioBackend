@@ -3,12 +3,12 @@
     namespace Comercio\Api\repository;
 
     use Comercio\Api\models\Usuario;
-    use Comercio\Api\utils\Conexao;
+    use Comercio\Api\utils\SingletonConexao;
     use Exception;
 
     class UsuarioRepository {
 
-        function ObterUsuario(int $codigoUsuario, Conexao $conexao): ?Usuario
+        function ObterUsuario(int $codigoUsuario, SingletonConexao $conexao): ?Usuario
         {
             $usuario = null;
             try {
@@ -34,7 +34,7 @@
             }
             return $usuario;
         }
-        function ObterUsuarioByLogin(string $login, Conexao $conexao): ?Usuario
+        function ObterUsuarioByLogin(string $login, SingletonConexao $conexao): ?Usuario
         {
             $usuario = null;
             try {
@@ -72,7 +72,7 @@
             }
             return $usuario;
         }
-        function ObterTodos(Conexao $conexao): array
+        function ObterTodos(SingletonConexao $conexao): array
         {
             $arr = array();
             try {
@@ -98,7 +98,7 @@
             }
             return $arr;
         }
-        function Adicionar(Usuario $usuario, Conexao $conexao): bool
+        function Adicionar(Usuario $usuario, SingletonConexao $conexao): bool
         {
             $success = false;
             try {
@@ -117,7 +117,7 @@
             }
             return $success;
         }
-        function Alterar(Usuario $usuario, Conexao $conexao): bool
+        function Alterar(Usuario $usuario, SingletonConexao $conexao): bool
         {
             $success = false;
             try {
@@ -137,7 +137,7 @@
             }
             return $success;
         }
-        function Deletar(int $codigoUsuario, Conexao $conexao): bool
+        function Deletar(int $codigoUsuario, SingletonConexao $conexao): bool
         {
             $success = false;
             try {

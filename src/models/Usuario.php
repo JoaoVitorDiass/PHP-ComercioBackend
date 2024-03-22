@@ -2,7 +2,7 @@
 
     namespace Comercio\Api\models;
     use Comercio\Api\repository\UsuarioRepository;
-    use Comercio\Api\utils\Conexao;
+    use Comercio\Api\utils\SingletonConexao;
 
     class Usuario {
 
@@ -41,32 +41,32 @@
             $this->_senha = $senha;
         }
 
-        function BuscarUsuario(int $codigoUsuario, Conexao $conexao): ?Usuario
+        function BuscarUsuario(int $codigoUsuario, SingletonConexao $conexao): ?Usuario
         {
             $repo = new UsuarioRepository();
             return $repo->ObterUsuario($codigoUsuario, $conexao);
         }
-        function BuscarUsuarioByLogin( string $login, Conexao $conexao): ?Usuario
+        function BuscarUsuarioByLogin( string $login, SingletonConexao $conexao): ?Usuario
         {
             $repo = new UsuarioRepository();
             return $repo->ObterUsuarioByLogin($login, $conexao);
         }
-        function BuscarTodos(Conexao $conexao): array
+        function BuscarTodos(SingletonConexao $conexao): array
         {
             $repo = new UsuarioRepository();
             return $repo->ObterTodos($conexao);
         }
-        function Adicionar(Conexao $conexao): bool
+        function Adicionar(SingletonConexao $conexao): bool
         {
             $repo = new UsuarioRepository();
             return $repo->Adicionar($this, $conexao);
         }
-        function Alterar(Conexao $conexao): bool
+        function Alterar(SingletonConexao $conexao): bool
         {
             $repo = new UsuarioRepository();
             return $repo->Alterar($this, $conexao);
         }
-        function Deletar(int $codigoUsuario, Conexao $conexao): bool
+        function Deletar(int $codigoUsuario, SingletonConexao $conexao): bool
         {
             $repo = new UsuarioRepository();
             return $repo->Deletar($codigoUsuario, $conexao);

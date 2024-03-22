@@ -5,7 +5,7 @@
     require_once "../../vendor/autoload.php";
 
     use Comercio\Api\models\Fornecedor;
-    use Comercio\Api\utils\Singleton;
+    use Comercio\Api\utils\SingletonConexao;
     use Comercio\Api\utils\Funcoes;
     use Exception;
 
@@ -13,7 +13,7 @@
     header("Access-Control-Allow-Methods: POST, GET, PATCH, DELETE, PUT, OPTIONS");
     header("Access-Control-Allow-Headers: Content-Type");
 
-    // error_reporting(0);
+    error_reporting(0);
 
     function buscar($codigoFornecedor) {
 
@@ -21,9 +21,11 @@
         try {
             $fornecedor = new Fornecedor($codigoFornecedor);
             
-            $conexao = Singleton::getConexao();
+            // $conexao = Singleton::getConexao();
+            $conexao = SingletonConexao::getInstancia();
             $fornecedor->Buscar($conexao);
-            Singleton::fecharConexao();
+            SingletonConexao::getInstancia()->fecharConexao();
+            // Singleton::fecharConexao();
             
             if($fornecedor == array()) {
                 $retorno['menssage'][] = "Fornecedor não encontrado!";
@@ -56,9 +58,11 @@
         try {
             $fornecedor = new Fornecedor();
             
-            $conexao = Singleton::getConexao();
+            // $conexao = Singleton::getConexao();
+            $conexao = SingletonConexao::getInstancia();
             $fornecedores = $fornecedor->BuscarTodos($conexao);
-            Singleton::fecharConexao();
+            SingletonConexao::getInstancia()->fecharConexao();
+            // Singleton::fecharConexao();
             
             if($fornecedores == array()) {
                 $retorno['menssage'][] = "Não há fornecedores cadastrados!";
@@ -101,9 +105,11 @@
                 $data["endereco"],
             );
 
-            $conexao = Singleton::getConexao();
+            // $conexao = Singleton::getConexao();
+            $conexao = SingletonConexao::getInstancia();
             $success = $fornecedor->Adicionar($conexao);
-            Singleton::fecharConexao();
+            SingletonConexao::getInstancia()->fecharConexao();
+            // Singleton::fecharConexao();
 
             if($success) {
                 http_response_code(201);
@@ -133,9 +139,11 @@
                 $data["endereco"],
             );
 
-            $conexao = Singleton::getConexao();
+            // $conexao = Singleton::getConexao();
+            $conexao = SingletonConexao::getInstancia();
             $success = $fornecedor->Alterar($conexao);
-            Singleton::fecharConexao();
+            SingletonConexao::getInstancia()->fecharConexao();
+            // Singleton::fecharConexao();
 
             if($success) {
                 http_response_code(202);
@@ -158,9 +166,11 @@
         try {
             $fornecedor = new Fornecedor();
 
-            $conexao = Singleton::getConexao();
+            // $conexao = Singleton::getConexao();
+            $conexao = SingletonConexao::getInstancia();
             $success = $fornecedor->Deletar($codigoFornecedor, $conexao);
-            Singleton::fecharConexao();
+            SingletonConexao::getInstancia()->fecharConexao();
+            // Singleton::fecharConexao();
             
             if($success) {
                 http_response_code(200);

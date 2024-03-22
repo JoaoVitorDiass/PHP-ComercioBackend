@@ -5,13 +5,13 @@
     use Comercio\Api\models\Venda;
     use Comercio\Api\models\Cliente;
 
-    use Comercio\Api\utils\Conexao;
+    use Comercio\Api\utils\SingletonConexao;
 
     use Exception;
 
     class VendaRepository {
 
-        function Obter(Venda $venda, Conexao $conexao): void
+        function Obter(Venda $venda, SingletonConexao $conexao): void
         {
             try {
                 $sql = "
@@ -33,7 +33,7 @@
                 throw new Exception($e->getMessage());
             }
         }
-        function ObterTodos(Conexao $conexao): array
+        function ObterTodos(SingletonConexao $conexao): array
         {
             $arr = array();
             try {
@@ -59,7 +59,7 @@
             }
             return $arr;
         }
-        function Adicionar(Venda $venda, Conexao $conexao): bool
+        function Adicionar(Venda $venda, SingletonConexao $conexao): bool
         {
             $success = false;
             try {
@@ -82,7 +82,7 @@
             }
             return $success;
         }
-        function Alterar(Venda $venda, Conexao $conexao): bool
+        function Alterar(Venda $venda, SingletonConexao $conexao): bool
         {
             $success = false;
             try {
@@ -102,7 +102,7 @@
             }
             return $success;
         }
-        function Deletar(int $codigoVenda, Conexao $conexao): bool
+        function Deletar(int $codigoVenda, SingletonConexao $conexao): bool
         {
             $success = false;
             try {

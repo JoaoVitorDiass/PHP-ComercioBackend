@@ -3,12 +3,12 @@
     namespace Comercio\Api\repository;
 
     use Comercio\Api\models\Fornecedor;
-    use Comercio\Api\utils\Conexao;
+    use Comercio\Api\utils\SingletonConexao;
     use Exception;
 
     class FornecedorRepository {
 
-        function Obter(Fornecedor $fornecedor, Conexao $conexao): void
+        function Obter(Fornecedor $fornecedor, SingletonConexao $conexao): void
         {
             try {
                 $sql = "
@@ -36,7 +36,7 @@
                 throw new Exception($e->getMessage());
             }
         }
-        function ObterTodos(Conexao $conexao): array
+        function ObterTodos(SingletonConexao $conexao): array
         {
             $arr = array();
             try {
@@ -68,7 +68,7 @@
             }
             return $arr;
         }
-        function Adicionar(Fornecedor $fornecedor, Conexao $conexao): bool
+        function Adicionar(Fornecedor $fornecedor, SingletonConexao $conexao): bool
         {
             $success = false;
             try {
@@ -100,7 +100,7 @@
             }
             return $success;
         }
-        function Alterar(Fornecedor $fornecedor, Conexao $conexao): bool
+        function Alterar(Fornecedor $fornecedor, SingletonConexao $conexao): bool
         {
             $success = false;
             try {
@@ -127,7 +127,7 @@
             }
             return $success;
         }
-        function Deletar(int $codigoFornecedor, Conexao $conexao): bool
+        function Deletar(int $codigoFornecedor, SingletonConexao $conexao): bool
         {
             $success = false;
             try {

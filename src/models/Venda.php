@@ -6,7 +6,7 @@
     use Comercio\Api\models\ItemVenda;
     use Comercio\Api\repository\VendaRepository;
 
-    use Comercio\Api\utils\Conexao;
+    use Comercio\Api\utils\SingletonConexao;
 
     class Venda {
         private int $_codigo;
@@ -68,28 +68,28 @@
             array_push($this->_itensVenda, $itemVenda);
         }
 
-        function Buscar(Conexao $conexao): void
+        function Buscar(SingletonConexao $conexao): void
         {
             $repo = new VendaRepository();
             $repo->Obter($this, $conexao);
         }
-        function BuscarTodos(Conexao $conexao): array
+        function BuscarTodos(SingletonConexao $conexao): array
         {
             $repo = new VendaRepository();
             return $repo->ObterTodos($conexao);
         }
-        function Adicionar(Conexao $conexao): bool
+        function Adicionar(SingletonConexao $conexao): bool
         {
             $repo = new VendaRepository();
             return $repo->Adicionar($this, $conexao);
         }
-        function Alterar(Conexao $conexao): bool
+        function Alterar(SingletonConexao $conexao): bool
         {
             $repo = new VendaRepository();
             return $repo->Alterar($this, $conexao);
         }
-        function Deletar(int $codigoVenda, Conexao $conexao): bool
-        {
+        function Deletar(int $codigoVenda, SingletonConexao $conexao): bool
+        { 
             $repo = new VendaRepository();
             return $repo->Deletar($codigoVenda, $conexao);
         }

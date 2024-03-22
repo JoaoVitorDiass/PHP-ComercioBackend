@@ -4,7 +4,7 @@
     require_once "../../vendor/autoload.php";
 
     use Comercio\Api\models\Usuario;
-    use Comercio\Api\utils\Singleton;
+    use Comercio\Api\utils\SingletonConexao;
     use Comercio\Api\utils\Funcoes;
     use Exception;
 
@@ -19,9 +19,11 @@
         try {
             $usuario = new Usuario();
             
-            $conexao = Singleton::getConexao();
+            // $conexao = Singleton::getConexao();
+            $conexao = SingletonConexao::getInstancia();
             $usuario = $usuario->BuscarUsuario($codigoUsuario,$conexao);
-            Singleton::fecharConexao();
+            SingletonConexao::getInstancia()->fecharConexao();
+            // Singleton::fecharConexao();
 
             if($usuario != null) {
                 $retorno['menssage'][]= "Sucesso";
@@ -46,10 +48,12 @@
         $retorno = Funcoes::getRetorno();
         try {
             $usuario = new Usuario();
-            
-            $conexao = Singleton::getConexao();
+
+            // $conexao = Singleton::getConexao();
+            $conexao = SingletonConexao::getInstancia();
             $usuarios = $usuario->BuscarTodos($conexao);
-            Singleton::fecharConexao();
+            SingletonConexao::getInstancia()->fecharConexao();
+            // Singleton::fecharConexao();
 
             if($usuarios != array()) {
                 $retorno["menssage"][] = "Sucesso";
@@ -77,10 +81,12 @@
             $usuario = new Usuario();
             $usuario->setLogin($login);
             $usuario->setSenha(base64_encode($senha));
-
-            $conexao = Singleton::getConexao();
+            
+            // $conexao = Singleton::getConexao();
+            $conexao = SingletonConexao::getInstancia();
             $success = $usuario->Adicionar($conexao);
-            Singleton::fecharConexao();
+            SingletonConexao::getInstancia()->fecharConexao();
+            // Singleton::fecharConexao();
 
             if($success) {
                 http_response_code(201);
@@ -106,9 +112,11 @@
             $usuario->setLogin($data["login"]);
             $usuario->setSenha(base64_encode($data["senha"]));
 
-            $conexao = Singleton::getConexao();
+            // $conexao = Singleton::getConexao();
+            $conexao = SingletonConexao::getInstancia();
             $success = $usuario->Alterar($conexao);
-            Singleton::fecharConexao();
+            SingletonConexao::getInstancia()->fecharConexao();
+            // Singleton::fecharConexao();
 
             if($success) {
                 http_response_code(202);
@@ -131,9 +139,11 @@
         try {
             $usuario = new Usuario();
 
-            $conexao = Singleton::getConexao();
+            // $conexao = Singleton::getConexao();
+            $conexao = SingletonConexao::getInstancia();
             $success = $usuario->Deletar($codigoUsuario, $conexao);
-            Singleton::fecharConexao();
+            SingletonConexao::getInstancia()->fecharConexao();
+            // Singleton::fecharConexao();
             
             if($success) {
                 http_response_code(200);

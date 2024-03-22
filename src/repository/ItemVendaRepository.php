@@ -6,11 +6,11 @@
     use Comercio\Api\models\Produto;
     use Comercio\Api\models\Venda;
 
-    use Comercio\Api\utils\Conexao;
+    use Comercio\Api\utils\SingletonConexao;
 
     use Exception;
     class ItemVendaRepository {
-        function ObterTodosByVenda(Venda $venda, Conexao $conexao): void
+        function ObterTodosByVenda(Venda $venda, SingletonConexao $conexao): void
         {
             try {
                 $sql = "
@@ -39,7 +39,7 @@
             }
         }
         
-        function Adicionar(ItemVenda $itemVenda, Conexao $conexao): bool
+        function Adicionar(ItemVenda $itemVenda, SingletonConexao $conexao): bool
         {
             $success = false;
             try {
@@ -65,7 +65,7 @@
             }
             return $success;
         }
-        function Alterar(ItemVenda $itemVenda, Conexao $conexao): bool
+        function Alterar(ItemVenda $itemVenda, SingletonConexao $conexao): bool
         {
             $success = false;
             try {
@@ -83,7 +83,7 @@
             }
             return $success;
         }
-        function Deletar(int $codigoItemVenda, Conexao $conexao): bool
+        function Deletar(int $codigoItemVenda, SingletonConexao $conexao): bool
         {
             $success = false;
             try {

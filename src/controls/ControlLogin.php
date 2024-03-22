@@ -5,7 +5,7 @@
     require_once "../../vendor/autoload.php";
 
     use Comercio\Api\models\Usuario;
-    use Comercio\Api\utils\Singleton;
+    use Comercio\Api\utils\SingletonConexao;
     use Comercio\Api\utils\Funcoes;
     use Exception;
 
@@ -21,9 +21,11 @@
         try {
             $usuario = new Usuario();
             
-            $conexao = Singleton::getConexao();
+            // $conexao = Singleton::getConexao();
+            $conexao = SingletonConexao::getInstancia();
             $usuario = $usuario->BuscarUsuarioByLogin($login,$conexao);
-            Singleton::fecharConexao();
+            SingletonConexao::getInstancia()->fecharConexao();
+            // Singleton::fecharConexao();
 
             if($usuario != null && $usuario->getLogin() == strtoupper($login) && $usuario->getSenha() == base64_encode($senha)) {
                 $retorno['menssage'][] = "Logando...";

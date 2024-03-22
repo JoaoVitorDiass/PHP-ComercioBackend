@@ -3,12 +3,12 @@
     namespace Comercio\Api\repository;
 
     use Comercio\Api\models\Cliente;
-    use Comercio\Api\utils\Conexao;
+    use Comercio\Api\utils\SingletonConexao;
     use Exception;
 
     class ClienteRepository {
         
-        function Obter(Cliente $cliente, Conexao $conexao): void
+        function Obter(Cliente $cliente, SingletonConexao $conexao): void
         {
             try {
                 $sql = "
@@ -40,7 +40,7 @@
                 throw new Exception($e->getMessage());
             }
         }
-        function ObterTodos(Conexao $conexao): array
+        function ObterTodos(SingletonConexao $conexao): array
         {
             $arr = array();
             try {
@@ -76,7 +76,7 @@
             }
             return $arr;
         }
-        function Adicionar(Cliente $cliente, Conexao $conexao): bool
+        function Adicionar(Cliente $cliente, SingletonConexao $conexao): bool
         {
             $success = false;
             try {
@@ -114,7 +114,7 @@
             }
             return $success;
         }
-        function Alterar(Cliente $cliente, Conexao $conexao): bool
+        function Alterar(Cliente $cliente, SingletonConexao $conexao): bool
         {
             $success = false;
             try {
@@ -144,7 +144,7 @@
             }
             return $success;
         }
-        function Deletar(int $codigoCliente, Conexao $conexao): bool
+        function Deletar(int $codigoCliente, SingletonConexao $conexao): bool
         {
             $success = false;
             try {

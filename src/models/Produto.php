@@ -7,6 +7,7 @@
     use Comercio\Api\repository\ProdutoRepository;
 
     use Comercio\Api\utils\Conexao;
+    use Comercio\Api\utils\SingletonConexao;
 
     class Produto {
 
@@ -103,27 +104,27 @@
 
 
 
-        function Buscar(Conexao $conexao): void
+        function Buscar(SingletonConexao $conexao): void
         {
             $repo = new ProdutoRepository();
             $repo->Obter($this, $conexao);
         }
-        function BuscarTodos(Conexao $conexao): array
+        function BuscarTodos(SingletonConexao $conexao): array
         {
             $repo = new ProdutoRepository();
             return $repo->ObterTodos($conexao);
         }
-        function Adicionar(Conexao $conexao): bool
+        function Adicionar(SingletonConexao $conexao): bool
         {
             $repo = new ProdutoRepository();
             return $repo->Adicionar($this, $conexao);
         }
-        function Alterar(Conexao $conexao): bool
+        function Alterar(SingletonConexao $conexao): bool
         {
             $repo = new ProdutoRepository();
             return $repo->Alterar($this, $conexao);
         }
-        function Deletar(int $codigoVenda, Conexao $conexao): bool
+        function Deletar(int $codigoVenda, $conexao): bool
         {
             $repo = new ProdutoRepository();
             return $repo->Deletar($codigoVenda, $conexao);

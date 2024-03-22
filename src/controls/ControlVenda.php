@@ -6,7 +6,7 @@
     
     use Comercio\Api\models\Venda;
     use Comercio\Api\models\ItemVenda;
-    use Comercio\Api\utils\Singleton;
+    use Comercio\Api\utils\SingletonConexao;
     use Comercio\Api\utils\Funcoes;
     use Exception;
 
@@ -20,28 +20,35 @@
 
         $retorno = Funcoes::getRetorno();
         try {
-            $venda = new Venda($codigoVenda);
+            $venda = new Venda($codigoVenda); 
             $itemVenda = new ItemVenda();
             
-            $conexao = Singleton::getConexao();
+            // $conexao = Singleton::getConexao();
+            $conexao = SingletonConexao::getInstancia();
             $venda->Buscar($conexao);
-            Singleton::fecharConexao();
+            SingletonConexao::getInstancia()->fecharConexao();
+            // Singleton::fecharConexao();
             
             if($venda == array()) {
-                $retorno['menssage'][] = "Venda não encontrada!";
+                $retorno['menssage'][] = "Venda não encontrada!"; 
             }
             else {
 
-                $conexao = Singleton::getConexao();
+                // $conexao = Singleton::getConexao();
+                $conexao = SingletonConexao::getInstancia();
                 $itemVenda->BuscarTodosByVenda($venda, $conexao);
-                Singleton::fecharConexao();
+                SingletonConexao::getInstancia()->fecharConexao();
+                // Singleton::fecharConexao();
 
                 $produtos = array();
                 foreach( $venda->getItensVenda() as &$itemVenda) {
 
-                    $conexao = Singleton::getConexao();
+                    // $conexao = Singleton::getConexao();
+                    $conexao = SingletonConexao::getInstancia();
                     $itemVenda->getProduto()->Buscar($conexao);
-                    Singleton::fecharConexao();
+                    SingletonConexao::getInstancia()->fecharConexao();
+                    // Singleton::fecharConexao();
+
                     $produtos[] = [
                         "codigo"             => $itemVenda->getProduto()->getCodigo(),
                         "descricao"          => $itemVenda->getProduto()->getDescricao(),
@@ -76,9 +83,11 @@
         try {
             $venda = new Venda();
             
-            $conexao = Singleton::getConexao();
+            // $conexao = Singleton::getConexao();
+            $conexao = SingletonConexao::getInstancia();
             $vendas = $venda->BuscarTodos($conexao);
-            Singleton::fecharConexao();
+            SingletonConexao::getInstancia()->fecharConexao();
+            // Singleton::fecharConexao();
             
             if($vendas == array()) {
                 $retorno['menssage'][] = "Não há vendas cadastradas!";
@@ -88,7 +97,13 @@
                 foreach($vendas as $venda) {
                     $produtos = array();
                     foreach( $venda->getItensVenda() as &$itemVenda) {
-                        $itemVenda->getProduto()->Buscar();
+
+                        // $conexao = Singleton::getConexao();
+                        $conexao = SingletonConexao::getInstancia();
+                        $itemVenda->getProduto()->Buscar($conexao);
+                        SingletonConexao::getInstancia()->fecharConexao();
+                        // Singleton::fecharConexao();
+
                         $produtos[] = [
                             "codigo"             => $itemVenda->getProduto()->getCodigo(),
                             "descricao"          => $itemVenda->getProduto()->getDescricao(),
@@ -224,18 +239,18 @@
             }
         break;
 
-        case "POST":
-            echo Adicionar(Funcoes::getData());
-        break;
+        // case "POST":
+        //     echo Adicionar(Funcoes::getData());
+        // break;
 
-        case "DELETE":
-            echo Deletar($_GET["codigo"]);
-            break;
+        // case "DELETE":
+        //     echo Deletar($_GET["codigo"]);
+        //     break;
 
-        case "PUT":
-            break;
+        // case "PUT":
+        //     break;
 
-        case "PATCH":
-            echo Alterar(Funcoes::getData());
-            break;
+        // case "PATCH":
+        //     echo Alterar(Funcoes::getData());
+        //     break;
     }

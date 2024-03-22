@@ -6,8 +6,8 @@
 
     use Comercio\Api\models\Produto;
     use Comercio\Api\models\Fornecedor;
-    use Comercio\Api\utils\Singleton;
     use Comercio\Api\utils\Funcoes;
+    use Comercio\Api\utils\SingletonConexao;
     use Exception;
 
     header("Access-Control-Allow-Origin: *");
@@ -22,9 +22,11 @@
         try {
             $produto = new Produto($codigoProduto);
             
-            $conexao = Singleton::getConexao();
+            // $conexao = Singleton::getConexao();
+            $conexao = SingletonConexao::getInstancia();
             $produto->Buscar($conexao);
-            Singleton::fecharConexao();
+            SingletonConexao::getInstancia()->fecharConexao();
+            // Singleton::fecharConexao();
             
             if($produto == array()) {
                 $retorno['menssage'][] = "Produto não encontrado!";
@@ -58,10 +60,12 @@
         try {
             $produto = new Produto();
             
-            $conexao = Singleton::getConexao();
+            // $conexao = Singleton::getConexao();
+            $conexao = SingletonConexao::getInstancia();
             $produtos = $produto->BuscarTodos($conexao);
-            Singleton::fecharConexao();
-            
+            SingletonConexao::getInstancia()->fecharConexao();
+            // Singleton::fecharConexao();
+
             if($produtos == array()) {
                 $retorno['menssage'][] = "Não há produtos cadastrados!";
             }
@@ -104,9 +108,11 @@
                 $data["estoqueMinimo"],
                 new Fornecedor($data["codigoFornecedor"])
             );
-            $conexao = Singleton::getConexao();
+            // $conexao = Singleton::getConexao();
+            $conexao = SingletonConexao::getInstancia();
             $success = $produto->Adicionar($conexao);
-            Singleton::fecharConexao();
+            SingletonConexao::getInstancia()->fecharConexao();
+            // Singleton::fecharConexao();
             if($success) {
                 http_response_code(201);
             }
@@ -136,9 +142,11 @@
                 new Fornecedor($data["codigoFornecedor"])
             );
 
-            $conexao = Singleton::getConexao();
+            // $conexao = Singleton::getConexao();
+            $conexao = SingletonConexao::getInstancia();
             $success = $produto->Alterar($conexao);
-            Singleton::fecharConexao();
+            SingletonConexao::getInstancia()->fecharConexao();
+            // Singleton::fecharConexao();
 
             if($success) {
                 http_response_code(202);
@@ -161,9 +169,11 @@
         try {
             $produto = new Produto();
 
-            $conexao = Singleton::getConexao();
+            // $conexao = Singleton::getConexao();
+            $conexao = SingletonConexao::getInstancia();
             $success = $produto->Deletar($codigoProduto, $conexao);
-            Singleton::fecharConexao();
+            SingletonConexao::getInstancia()->fecharConexao();
+            // Singleton::fecharConexao();
             
             if($success) {
                 http_response_code(200);

@@ -4,12 +4,12 @@
 
     use Comercio\Api\models\Produto;
     use Comercio\Api\models\Fornecedor;
-    use Comercio\Api\utils\Conexao;
+    use Comercio\Api\utils\SingletonConexao;
     use Exception;
 
     class ProdutoRepository {
 
-        function Obter(Produto $produto, Conexao $conexao): void
+        function Obter(Produto $produto, SingletonConexao $conexao): void
         {
             try {
                 $sql = "
@@ -39,7 +39,7 @@
                 throw new Exception($e->getMessage());
             }
         }
-        function ObterTodos(Conexao $conexao): array
+        function ObterTodos(SingletonConexao $conexao): array
         {
             $arr = array();
             try {
@@ -74,7 +74,7 @@
             }
             return $arr;
         }
-        function Adicionar(Produto $produto, Conexao $conexao): bool
+        function Adicionar(Produto $produto, SingletonConexao $conexao): bool
         {
             $success = false;
             try {
@@ -109,7 +109,7 @@
             }
             return $success;
         }
-        function Alterar(Produto $produto, Conexao $conexao): bool
+        function Alterar(Produto $produto, SingletonConexao $conexao): bool
         {
             $success = false;
             try {
@@ -138,7 +138,7 @@
             }
             return $success;
         }
-        function Deletar(int $codigoProduto, Conexao $conexao): bool
+        function Deletar(int $codigoProduto, SingletonConexao $conexao): bool
         {
             $success = false;
             try {

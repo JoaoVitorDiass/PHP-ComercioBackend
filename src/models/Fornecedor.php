@@ -3,7 +3,7 @@
 namespace Comercio\Api\models;
 
 use Comercio\Api\repository\FornecedorRepository;
-use Comercio\Api\utils\Conexao;
+use Comercio\Api\utils\SingletonConexao;
 
 class Fornecedor {
 
@@ -83,27 +83,27 @@ class Fornecedor {
     {
         $this->_endereco = $endereco;
     }
-    function Buscar(Conexao $conexao): void
+    function Buscar(SingletonConexao $conexao): void
     {
         $repo = new FornecedorRepository();
         $repo->Obter($this, $conexao);
     }
-    function BuscarTodos(Conexao $conexao): array
+    function BuscarTodos(SingletonConexao $conexao): array
     {
         $repo = new FornecedorRepository();
         return $repo->ObterTodos($conexao);
     }
-    function Adicionar(Conexao $conexao): bool
+    function Adicionar(SingletonConexao $conexao): bool
     {
         $repo = new FornecedorRepository();
-        return $repo->Adicionar($this, $conexao);
+        return $repo->Adicionar($this, $conexao); 
     }
-    function Alterar(Conexao $conexao): bool
+    function Alterar(SingletonConexao $conexao): bool
     {
         $repo = new FornecedorRepository();
         return $repo->Alterar($this, $conexao);
     }
-    function Deletar(int $codigoCliente, Conexao $conexao): bool
+    function Deletar(int $codigoCliente, SingletonConexao $conexao): bool
     {
         $repo = new FornecedorRepository();
         return $repo->Deletar($codigoCliente, $conexao);
