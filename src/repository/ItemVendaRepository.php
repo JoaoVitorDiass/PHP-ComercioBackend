@@ -38,7 +38,6 @@
                 throw new Exception($e->getMessage());
             }
         }
-        
         function Adicionar(ItemVenda $itemVenda, SingletonConexao $conexao): bool
         {
             $success = false;

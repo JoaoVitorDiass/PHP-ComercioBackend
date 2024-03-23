@@ -65,4 +65,10 @@
             $repo = new ItemVendaRepository();
             $repo->ObterTodosByVenda($venda, $conexao);
         }
+        function Adicionar(SingletonConexao $conexao): bool
+        {
+            $repo = new ItemVendaRepository();
+            return $repo->Adicionar($this, $conexao);
+        }
+
     }
