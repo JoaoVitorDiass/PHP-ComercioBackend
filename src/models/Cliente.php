@@ -3,7 +3,7 @@
     namespace Comercio\Api\models;
 
     use Comercio\Api\repository\ClienteRepository;
-    use Comercio\Api\utils\Conexao;
+    use Comercio\Api\utils\SingletonConexao;
 
     use DateTime;
     class Cliente {
@@ -108,27 +108,27 @@
             $this->_endereco = $endereco;
         }
 
-        function Buscar(Conexao $conexao): void
+        function Buscar(SingletonConexao $conexao): void
         {
             $repo = new ClienteRepository();
             $repo->Obter($this, $conexao);
         }
-        function BuscarTodos(Conexao $conexao): array
+        function BuscarTodos(SingletonConexao $conexao): array
         {
             $repo = new ClienteRepository();
             return $repo->ObterTodos($conexao);
         }
-        function Adicionar(Conexao $conexao): bool
+        function Adicionar(SingletonConexao $conexao): bool
         {
             $repo = new ClienteRepository();
             return $repo->Adicionar($this, $conexao);
         }
-        function Alterar(Conexao $conexao): bool
+        function Alterar(SingletonConexao $conexao): bool
         {
             $repo = new ClienteRepository();
             return $repo->Alterar($this, $conexao);
         }
-        function Deletar(int $codigoCliente, Conexao $conexao): bool
+        function Deletar(int $codigoCliente, SingletonConexao $conexao): bool
         {
             $repo = new ClienteRepository();
             return $repo->Deletar($codigoCliente, $conexao);

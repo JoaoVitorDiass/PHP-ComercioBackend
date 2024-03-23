@@ -14,6 +14,7 @@
                 $erro = oci_error();
                 die("Erro na conexão com o banco de dados Oracle: " . $erro['message']);
             }
+            oci_set_autocommit($this->conexao, false);
         }
         // Evita a clonagem da instância
         private function __clone() {}
@@ -32,6 +33,7 @@
                     $erro = oci_error();
                     die("Erro na conexão com o banco de dados Oracle: " . $erro['message']);
                 }
+                oci_set_autocommit(self::$instancia->conexao, false);
             }
             return self::$instancia;
         }
@@ -110,4 +112,12 @@
                 throw new Exception($e->getMessage());
             }
         }
+        public function persistir(): void
+        {
+            oci_commit($this->conexao);
+        }
+        public function rollback(): void 
+        {
+            oci_rollback($this->conexao);
+        } 
     }

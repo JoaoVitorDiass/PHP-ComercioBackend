@@ -4,6 +4,7 @@
 
     require_once "../../vendor/autoload.php";
     
+    use Comercio\Api\models\Produto;
     use Comercio\Api\models\Venda;
     use Comercio\Api\models\Cliente;
     use Comercio\Api\models\ItemVenda;
@@ -135,39 +136,90 @@
         header('Content-Type: Application/json');
         return json_encode($retorno);
     }
+
+    /*
+    data = {
+        "codigo": 0,
+        "codigoCliente": 0,
+        "items": [
+            {
+                "codigoProduto": 0,
+                "quantidade": 1,
+            },
+        ]
+    }
+    */
+
     function Adicionar($data) {
         $retorno = Funcoes::getRetorno();
         try {
+
             $venda = new Venda(
                 0,
                 new Cliente($data["codigoCliente"]),
             );
 
+            $somaValorTotalVenda = (float) 0;
+            $arrItemsVenda = array();
+            foreach($data["items"] as $item) {
+
+                $itemVenda = new ItemVenda(
+                    0,
+                    $venda,
+                    new Produto($item["codigoProduto"]),
+                    $item["quantidade"],
+                );
+
+                $conexao = SingletonConexao::getInstancia();
+                $itemVenda->getProduto()->Buscar($conexao);
+                SingletonConexao::getInstancia()->fecharConexao();
+
+                if( ($itemVenda->getProduto()->getQuantidadeEstoque() - $item["quantidade"]) <= 0) {
+                    throw new Exception("Não foi possivel realizar a venda... Não há quantidade em estoque o suficiente para o produto: ".$itemVenda->getProduto()->getDescricao());
+                }
+
+                $itemVenda->getProduto()->setQuantidadeEstoque($itemVenda->getProduto()->getQuantidadeEstoque()-$item["quantidade"]);
+
+                $conexao = SingletonConexao::getInstancia();
+                $success = $itemVenda->getProduto()->Alterar($conexao);
+                SingletonConexao::getInstancia()->fecharConexao();
+
+                if(!$success) {
+                    throw new Exception("Não foi possivel realizar a venda... Erro ao diminuir a quantidade do produto comprado: ".$itemVenda->getProduto()->getDescricao());
+                }
+
+                $somaValorTotalVenda += $itemVenda->getProduto()->getValorVenda() * $itemVenda->getQuantidade();
+
+                $arrItemsVenda[] = $itemVenda;
+            }
+
+            $venda->setItensVenda($arrItemsVenda);
+            $venda->setValorTotal($somaValorTotalVenda);
+
             $conexao = SingletonConexao::getInstancia();
             $success = $venda->Adicionar($conexao);
             SingletonConexao::getInstancia()->fecharConexao();
+            
+            if(!$success) {
+                throw new Exception("Não foi possivel realizar a venda... Erro ao persistir a venda");
+            }
 
-            foreach($data["items"] as $item) {
-                $itemVenda = new ItemVenda(
-                    0,
-                    $data["codigoCliente"],
-                    $item["codigoProduto"],
-                    $item["quantidade"],
-                );
+            foreach($venda->getItensVenda() as $itemVenda) {
+
                 $conexao = SingletonConexao::getInstancia();
                 $success = $itemVenda->Adicionar($conexao);
                 SingletonConexao::getInstancia()->fecharConexao();
+                if(!$success) {
+                    throw new Exception("Não foi possivel realizar a venda... Erro ao persistir a item da venda: ".$itemVenda->getProduto()->getDescricao());
+                }
             }
-
-            if($success) {
-                http_response_code(201);
-            }
-            else {
-                throw new Exception("Erro ao adicionar a venda ...");
-            }
+            SingletonConexao::getInstancia()->persistir();
+            http_response_code(201);
         }
         catch (Exception $e)
         {
+            SingletonConexao::getInstancia()->rollback();
+
             $retorno['error'] = true;
             $retorno['mensage'][] = $e->getMessage();
             http_response_code(400);
