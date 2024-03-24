@@ -4,6 +4,7 @@
 
     require_once "../../vendor/autoload.php";
     
+    use Comercio\Api\models\MetodoPagamento;
     use Comercio\Api\models\Produto;
     use Comercio\Api\models\Venda;
     use Comercio\Api\models\Cliente;
@@ -157,10 +158,17 @@
             $venda = new Venda(
                 0,
                 new Cliente($data["codigoCliente"]),
+                0,
+                new MetodoPagamento($data["codigoMetodoPagamento"])
             );
+
+            $conexao = SingletonConexao::getInstancia();
+            $venda->getMetodoPagamento()->Buscar($conexao);
+            SingletonConexao::getInstancia()->fecharConexao();
 
             $somaValorTotalVenda = (float) 0;
             $arrItemsVenda = array();
+            
             foreach($data["items"] as $item) {
 
                 $itemVenda = new ItemVenda(
@@ -172,17 +180,21 @@
 
                 $conexao = SingletonConexao::getInstancia();
                 $itemVenda->getProduto()->Buscar($conexao);
-                SingletonConexao::getInstancia()->fecharConexao();
+                // SingletonConexao::getInstancia()->fecharConexao();
 
-                if( ($itemVenda->getProduto()->getQuantidadeEstoque() - $item["quantidade"]) <= 0) {
+                if( ($itemVenda->getProduto()->getQuantidadeEstoque() - $item["quantidade"]) < 0) {
                     throw new Exception("Não foi possivel realizar a venda... Não há quantidade em estoque o suficiente para o produto: ".$itemVenda->getProduto()->getDescricao());
                 }
-
-                $itemVenda->getProduto()->setQuantidadeEstoque($itemVenda->getProduto()->getQuantidadeEstoque()-$item["quantidade"]);
+                $conexao = SingletonConexao::getInstancia();
+                $itemVenda->getProduto()->getFornecedor()->Buscar($conexao);
+                // SingletonConexao::getInstancia()->fecharConexao();
+                
+                $itemVenda->getProduto()->attach($itemVenda->getProduto()->getFornecedor());
+                $itemVenda->getProduto()->setQuantidadeEstoque($itemVenda->getProduto()->getQuantidadeEstoque()-$item["quantidade"], $retorno);
 
                 $conexao = SingletonConexao::getInstancia();
                 $success = $itemVenda->getProduto()->Alterar($conexao);
-                SingletonConexao::getInstancia()->fecharConexao();
+                // SingletonConexao::getInstancia()->fecharConexao();
 
                 if(!$success) {
                     throw new Exception("Não foi possivel realizar a venda... Erro ao diminuir a quantidade do produto comprado: ".$itemVenda->getProduto()->getDescricao());
@@ -195,10 +207,11 @@
 
             $venda->setItensVenda($arrItemsVenda);
             $venda->setValorTotal($somaValorTotalVenda);
+            $venda->calcularValorTotalVenda();
 
             $conexao = SingletonConexao::getInstancia();
             $success = $venda->Adicionar($conexao);
-            SingletonConexao::getInstancia()->fecharConexao();
+            // SingletonConexao::getInstancia()->fecharConexao();
             
             if(!$success) {
                 throw new Exception("Não foi possivel realizar a venda... Erro ao persistir a venda");
@@ -208,12 +221,13 @@
 
                 $conexao = SingletonConexao::getInstancia();
                 $success = $itemVenda->Adicionar($conexao);
-                SingletonConexao::getInstancia()->fecharConexao();
+                // SingletonConexao::getInstancia()->fecharConexao();
                 if(!$success) {
                     throw new Exception("Não foi possivel realizar a venda... Erro ao persistir a item da venda: ".$itemVenda->getProduto()->getDescricao());
                 }
             }
             SingletonConexao::getInstancia()->persistir();
+            SingletonConexao::getInstancia()->fecharConexao();
             http_response_code(201);
         }
         catch (Exception $e)
@@ -221,7 +235,7 @@
             SingletonConexao::getInstancia()->rollback();
 
             $retorno['error'] = true;
-            $retorno['mensage'][] = $e->getMessage();
+            $retorno['menssage'][] = $e->getMessage();
             http_response_code(400);
         }
         header('Content-Type: Application/json');

@@ -4,8 +4,10 @@ namespace Comercio\Api\models;
 
 use Comercio\Api\repository\FornecedorRepository;
 use Comercio\Api\utils\SingletonConexao;
+use Comercio\Api\utils\observer\Observer;
+use Comercio\Api\utils\observer\Subject;
 
-class Fornecedor {
+class Fornecedor implements Observer {
 
     private int $_codigo;
     private string $_nome;
@@ -83,6 +85,13 @@ class Fornecedor {
     {
         $this->_endereco = $endereco;
     }
+    /*------------------------------------------------------------*/
+    public function update(Subject $subject, array $retorno): void { 
+        if ($subject instanceof Produto) {
+            $retorno["message"][] = "Fornecedor ".$this->_codigo.": Estoque do produto está baixo.\n";
+        }
+    }
+    /*------------------------------------------------------------*/
     function Buscar(SingletonConexao $conexao): void
     {
         $repo = new FornecedorRepository();

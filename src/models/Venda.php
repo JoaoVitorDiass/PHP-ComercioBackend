@@ -4,8 +4,9 @@
 
     use Comercio\Api\models\Cliente;
     use Comercio\Api\models\ItemVenda;
+    use Comercio\Api\models\Pagamento\Pagamento;
+    use Comercio\Api\models\Pagamento\Dinheiro;
     use Comercio\Api\repository\VendaRepository;
-
     use Comercio\Api\utils\SingletonConexao;
 
     class Venda {
@@ -13,7 +14,8 @@
         private ?Cliente $_cliente;
         private float $_valorTotal;
         private array $_itensVenda;
-        
+        private ?MetodoPagamento $_metodoPagamento;
+        private ?Pagamento $_pagamento;
 
         /**
          * @param int $codigo
@@ -24,11 +26,14 @@
         function __construct(   int $codigo=0,
                                 Cliente $cliente=null,
                                 float $valorTotal=0,
-                                array $itensVenda=array() ) {
+                                MetodoPagamento $metodoPagamento=null,
+                                array $itensVenda=array()) {
             $this->_codigo = $codigo;
             $this->_cliente = $cliente;
             $this->_valorTotal = $valorTotal;
             $this->_itensVenda = $itensVenda;
+            $this->_metodoPagamento = $metodoPagamento;
+            $this->_pagamento = null;
         }
 
         function getCodigo() : int
@@ -67,6 +72,22 @@
         {
             array_push($this->_itensVenda, $itemVenda);
         }
+        function getMetodoPagamento() : MetodoPagamento
+        {
+            return $this->_metodoPagamento;
+        }
+        function setMetodoPagamento(MetodoPagamento $metodoPagamento) : void
+        {
+            $this->_metodoPagamento = $metodoPagamento;
+        }
+        
+        /*------------------------------------------------------------*/
+        function calcularValorTotalVenda(): void 
+        {
+            $this->_pagamento = new Dinheiro();  
+            $this->_pagamento->calcular($this);
+        }
+        /*------------------------------------------------------------*/
 
         function Buscar(SingletonConexao $conexao): void
         {

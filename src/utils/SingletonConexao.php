@@ -14,7 +14,6 @@
                 $erro = oci_error();
                 die("Erro na conexão com o banco de dados Oracle: " . $erro['message']);
             }
-            oci_set_autocommit($this->conexao, false);
         }
         // Evita a clonagem da instância
         private function __clone() {}
@@ -33,7 +32,6 @@
                     $erro = oci_error();
                     die("Erro na conexão com o banco de dados Oracle: " . $erro['message']);
                 }
-                oci_set_autocommit(self::$instancia->conexao, false);
             }
             return self::$instancia;
         }
@@ -53,7 +51,7 @@
                     $erro = oci_error($this->conexao);
                     throw new Exception("Erro ao preparar a query: " . $erro['message']);
                 }
-                $rs = oci_execute($stmt);
+                $rs = oci_execute($stmt, OCI_NO_AUTO_COMMIT);
                 if ($rs === false) {
                     $erro = oci_error($stmt);
                     throw new Exception("Erro ao executar a query: " . $erro['message']);

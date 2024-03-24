@@ -52,7 +52,7 @@
                         (SEQ_GER_VENDA_X_PRODUTO.NEXTVAL,
                         ':codigoVenda',
                         ':codigoProduto',
-                        ':quantidade');
+                        ':quantidade')
                 ";
                 $sql = str_replace(":codigoVenda", $itemVenda->getVenda()->getCodigo(), $sql);
                 $sql = str_replace(":codigoProduto", $itemVenda->getProduto()->getCodigo(), $sql);

@@ -3,13 +3,12 @@
     namespace Comercio\Api\models;
 
     use Comercio\Api\models\Fornecedor;
-
     use Comercio\Api\repository\ProdutoRepository;
-
-    use Comercio\Api\utils\Conexao;
     use Comercio\Api\utils\SingletonConexao;
+    use Comercio\Api\utils\observer\Subject;
+    use Comercio\Api\utils\observer\Observer;
 
-    class Produto {
+    class Produto implements Subject{ 
 
         private int $_codigo;
         private string $_descricao;
@@ -17,8 +16,9 @@
         private float $_valorVenda;
         private int $_quantidadeEstoque;
         private int $_estoqueMinimo;
-        private ?Fornecedor $_fornecedor;
+        private ?Fornecedor $_fornecedor; // Observador
 
+        private Observer $observer;
 
         /**
          * @param int $codigo
@@ -43,6 +43,7 @@
             $this->_quantidadeEstoque = $quantidadeEstoque;
             $this->_fornecedor = $fornecedor;
             $this->_estoqueMinimo = $estoqueMinimo;
+            // tenho que instanciar todos os observadores
         }
         function getCodigo(): int
         {
@@ -80,9 +81,12 @@
         {
             return $this->_quantidadeEstoque;
         }
-        function setQuantidadeEstoque(int $quantidadeEstoque): void
+        function setQuantidadeEstoque(int $quantidadeEstoque, array $retorno, bool $flagRepository=true): void
         {
             $this->_quantidadeEstoque = $quantidadeEstoque;
+            if($flagRepository == true && $this->_quantidadeEstoque <= $this->_estoqueMinimo) {
+                $this->notify($retorno);
+            }
         }
         function getEstoqueMinimo(): int
         {
@@ -100,10 +104,19 @@
         {
             $this->_fornecedor = $fornecedor;
         }
+        /*------------------------------------------------------------*/
 
+        public function attach(Observer $observer): void
+        {
+            $this->observer = $observer;
+        }
+        public function detach(Observer $observer): void { }
+        public function notify(array $retorno): void
+        {
+            $this->observer->update($this, $retorno);
+        }
 
-
-
+        /*------------------------------------------------------------*/
         function Buscar(SingletonConexao $conexao): void
         {
             $repo = new ProdutoRepository();
