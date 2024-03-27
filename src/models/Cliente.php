@@ -40,7 +40,7 @@
             $this->_telefone = $telefone;
             $this->_rg = $rg;
             $this->_email = $email;
-            $this->endereco = $endereco;
+            $this->_endereco = $endereco;
         }
 
         function getCodigo() : int

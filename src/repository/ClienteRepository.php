@@ -5,6 +5,7 @@
     use Comercio\Api\models\Cliente;
     use Comercio\Api\utils\SingletonConexao;
     use Exception;
+    use Datetime;
 
     class ClienteRepository {
         
@@ -62,7 +63,7 @@
                         $row["CODIGO"],
                         $row["NOME"],
                         $row["CPF"],
-                        $row["DATA_NASCIMENTO"],
+                        Datetime::createFromFormat("d/m/Y",$row["DATA_NASCIMENTO"]),
                         $row["TELEFONE"],
                         $row["RG"],
                         $row["EMAIL"],

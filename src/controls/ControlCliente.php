@@ -65,7 +65,7 @@
                 $retorno['menssage'][] = "Não há clientes cadastrados!";
             }
             else {
-                $retorno['menssage'][] = "Listando produtos ...";
+                $retorno['menssage'][] = "Listando clientes ...";
 
                 foreach($clientes as $cliente) {
                     $retorno['data'][] = [
