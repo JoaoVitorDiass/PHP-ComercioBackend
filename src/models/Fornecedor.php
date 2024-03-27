@@ -88,11 +88,11 @@ class Fornecedor implements Observer {
     /*------------------------------------------------------------*/
     public function update(Subject $subject): void {  
         if ($subject instanceof Produto) {
-            echo "Fornecedor ".$this->_codigo.": Estoque do produto ".$subject->getCodigo()." - ". $subject->getDescricao()." está baixo.\n";
+            // echo "Fornecedor ".$this->_codigo.": Estoque do produto ".$subject->getCodigo()." - ". $subject->getDescricao()." está baixo.\n";
 
             $notificacao = new Notificacoes(
                 0,
-                "Fornecedor ".$this->_codigo.": Estoque do produto ".$subject->getCodigo()." - ". $subject->getDescricao()." está baixo.\n",
+                "Fornecedor ".$this->_codigo." - ".$this->getNome().": Estoque do produto ".$subject->getCodigo()." - ". $subject->getDescricao()." está baixo.",
                 $this,
                 $subject
             );

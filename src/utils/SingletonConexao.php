@@ -75,7 +75,7 @@
                     $erro = oci_error($this->conexao);
                     throw new Exception("Erro ao preparar a query: " . $erro['message']);
                 }
-                $rs = oci_execute($stmt);
+                $rs = oci_execute($stmt, OCI_NO_AUTO_COMMIT);
                 if ($rs === false) {
                     $erro = oci_error($stmt);
                     throw new Exception("Erro ao executar a query: " . $erro['message']);
@@ -96,7 +96,7 @@
                     $erro = oci_error(self::$conexao);
                     throw new Exception("Erro ao preparar a query: " . $erro['message']);
                 }
-                $rs = oci_execute($stmt);
+                $rs = oci_execute($stmt, OCI_NO_AUTO_COMMIT);
                 if ($rs === false) {
                     $erro = oci_error($stmt);
                     throw new Exception("Erro ao executar a query: " . $erro['message']);

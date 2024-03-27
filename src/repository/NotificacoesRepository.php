@@ -72,18 +72,18 @@
                         N_COD_FORNECEDOR  AS CODIGO_FORNECEDOR,
                         N_COD_PRODUTO     AS CODIGO_PRODUTO
                     FROM GER_NOTIFICACOES_FORNECEDORES T
-                    WHERE CODIGO_FORNECEDOR = ':codigoFornecedor'
-                    AND N_COD_PRODUTO (:codigosProdutos)
+                    WHERE N_COD_FORNECEDOR = ':codigoFornecedor'
+                    AND N_COD_PRODUTO IN (:codigosProdutos)
                 ";
 
                 $codigosProdutos = "";
                 $sql = str_replace(":codigoFornecedor", $venda->getCliente()->getCodigo(), $sql);
+
+
                 foreach($venda->getItensVenda() as $itemVenda) {
                     $codigosProdutos .= "'".$itemVenda->getProduto()->getCodigo()."',";
                 }
-                $sql = str_replace(":codigoFornecedor", substr($codigosProdutos,0,length:$codigosProdutos-1), $sql);
-
-                // echo $sql; exit;
+                $sql = str_replace(":codigosProdutos", substr($codigosProdutos,0,strlen($codigosProdutos)-1), $sql);
 
                 $rows = $conexao->buscarTodos($sql);
                 foreach($rows as $row) {
@@ -112,11 +112,10 @@
                     N_COD_FORNECEDOR, 
                     N_COD_PRODUTO)
                 VALUES
-                    (SEQ_GER_NOTIFICACOES_FORNECEDORES.NEXTVAL, 
+                    (SEQ_NOT_FORN.NEXTVAL, 
                     ':mensagem', 
                     ':codigoFornecedor', 
-                    ':codigoProduto')
-                ";
+                    ':codigoProduto')";
                 $sql = str_replace(":codigoFornecedor", $notificacoes->getFornecedor()->getCodigo(), $sql);
                 $sql = str_replace(":mensagem", $notificacoes->getMensagem(), $sql);
                 $sql = str_replace(":codigoProduto", $notificacoes->getProduto()->getCodigo(), $sql);
@@ -178,14 +177,15 @@
             try {
                 $sql = "
                     DELETE GER_NOTIFICACOES_FORNECEDORES
-                    WHERE CODIGO_FORNECEDOR = ':codigoFornecedor'
-                    AND N_COD_PRODUTO (:codigosProdutos)
+                    WHERE N_COD_FORNECEDOR = ':codigoFornecedor'
+                    AND N_COD_PRODUTO IN (:codigosProdutos)
                 ";
+                $codigosProdutos = "";
                 $sql = str_replace(":codigoFornecedor", $venda->getCliente()->getCodigo(), $sql);
                 foreach($venda->getItensVenda() as $itemVenda) {
                     $codigosProdutos .= "'".$itemVenda->getProduto()->getCodigo()."',";
                 }
-                $sql = str_replace(":codigoFornecedor", substr($codigosProdutos,0,length:$codigosProdutos-1), $sql);
+                $sql = str_replace(":codigosProdutos", substr($codigosProdutos,0,strlen($codigosProdutos)-1), $sql);
                 $success = $conexao->executar($sql);
             }
             catch ( Exception $e) {

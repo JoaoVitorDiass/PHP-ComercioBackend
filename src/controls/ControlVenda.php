@@ -5,6 +5,7 @@
     require_once "../../vendor/autoload.php";
     
     use Comercio\Api\models\MetodoPagamento;
+    use Comercio\Api\models\Notificacoes;
     use Comercio\Api\models\Produto;
     use Comercio\Api\models\Venda;
     use Comercio\Api\models\Cliente;
@@ -237,6 +238,17 @@
                 if(!$success) {
                     throw new Exception("Não foi possivel realizar a venda... Erro ao persistir a item da venda: ".$itemVenda->getProduto()->getDescricao());
                 }
+            }
+
+            $notificacoes = new Notificacoes();
+
+            
+            $conexao = SingletonConexao::getInstancia();
+            $arrNotificacoes = $notificacoes->BuscarTodosByVenda($venda,$conexao);
+            $notificacoes->DeletarByVenda($venda,$conexao);
+
+            foreach($arrNotificacoes as $notificacao) {
+                $retorno["menssage"][] = $notificacao->getMensagem();
             }
             SingletonConexao::getInstancia()->persistir();
             SingletonConexao::getInstancia()->fecharConexao();

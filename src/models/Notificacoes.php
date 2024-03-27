@@ -9,8 +9,8 @@
 
         private int $_codigo;
         private string $_mensagem;
-        private Fornecedor $_fornecedor;
-        private Produto $_produto;
+        private ?Fornecedor $_fornecedor;
+        private ?Produto $_produto;
 
         public function __construct(int $codigo=0,
                                     string $mensagem="",
@@ -64,6 +64,11 @@
             $repo = new NotificacoesRepository();
             return $repo->ObterTodos($conexao);
         }
+        function BuscarTodosByVenda(Venda $venda, SingletonConexao $conexao): array
+        {
+            $repo = new NotificacoesRepository();
+            return $repo->ObterTodosByVenda( $venda, $conexao); 
+        }
         function Adicionar(SingletonConexao $conexao): bool
         {
             $repo = new NotificacoesRepository();
@@ -79,7 +84,7 @@
             $repo = new NotificacoesRepository();
             return $repo->Deletar($codigoVenda, $conexao);
         }
-        function DeletarbByVenda(Venda $venda, $conexao): bool
+        function DeletarByVenda(Venda $venda, $conexao): bool
         {
             $repo = new NotificacoesRepository();
             return $repo->DeletarByVenda($venda, $conexao);
