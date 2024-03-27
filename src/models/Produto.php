@@ -17,8 +17,7 @@
         private int $_quantidadeEstoque;
         private int $_estoqueMinimo;
         private ?Fornecedor $_fornecedor; // Observador
-
-        private Observer $observer;
+        private array $observers;
 
         /**
          * @param int $codigo
@@ -81,11 +80,11 @@
         {
             return $this->_quantidadeEstoque;
         }
-        function setQuantidadeEstoque(int $quantidadeEstoque, array $retorno, bool $flagRepository=true): void
+        function setQuantidadeEstoque(int $quantidadeEstoque,  bool $flagRepository=true): void
         {
             $this->_quantidadeEstoque = $quantidadeEstoque;
             if($flagRepository == true && $this->_quantidadeEstoque <= $this->_estoqueMinimo) {
-                $this->notify($retorno);
+                $this->notify(); 
             }
         }
         function getEstoqueMinimo(): int
@@ -108,12 +107,19 @@
 
         public function attach(Observer $observer): void
         {
-            $this->observer = $observer;
+            $this->observers[] = $observer;
         }
-        public function detach(Observer $observer): void { }
-        public function notify(array $retorno): void
+        public function detach(Observer $observer): void {
+            $key = array_search($observer, $this->observers);
+            if ($key !== false) {
+                unset($this->observers[$key]);
+            }
+        }
+        public function notify(): void
         {
-            $this->observer->update($this, $retorno);
+            foreach ($this->observers as $observer) {
+                $observer->update($this);
+            }
         }
 
         /*------------------------------------------------------------*/

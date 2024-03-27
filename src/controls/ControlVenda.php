@@ -191,7 +191,7 @@
                 // SingletonConexao::getInstancia()->fecharConexao();
                 
                 $itemVenda->getProduto()->attach($itemVenda->getProduto()->getFornecedor());
-                $itemVenda->getProduto()->setQuantidadeEstoque($itemVenda->getProduto()->getQuantidadeEstoque()-$item["quantidade"], $retorno);
+                $itemVenda->getProduto()->setQuantidadeEstoque($itemVenda->getProduto()->getQuantidadeEstoque()-$item["quantidade"]);
 
                 $conexao = SingletonConexao::getInstancia();
                 $success = $itemVenda->getProduto()->Alterar($conexao);
