@@ -16,6 +16,7 @@
         private array $_itensVenda;
         private ?MetodoPagamento $_metodoPagamento;
         private ?Pagamento $_pagamento;
+        private bool $_creadiario;
 
         /**
          * @param int $codigo
@@ -34,6 +35,8 @@
             $this->_itensVenda = $itensVenda;
             $this->_metodoPagamento = $metodoPagamento;
             $this->_pagamento = null;
+            $this->_creadiario = false;
+
         }
 
         function getCodigo() : int
@@ -80,6 +83,15 @@
         {
             $this->_metodoPagamento = $metodoPagamento;
         }
+        function getCrediario() : bool
+        {
+            return $this->_creadiario;
+        }
+        function setCrediario(bool $crediario) : void
+        {
+            $this->_creadiario = $crediario;
+        }
+
         
         /*------------------------------------------------------------*/
         function calcularValorTotalVenda(): void 

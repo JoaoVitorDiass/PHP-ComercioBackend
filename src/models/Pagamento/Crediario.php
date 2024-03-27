@@ -9,8 +9,10 @@
         public function calcular(Venda $venda): void
         {
             if($venda->getMetodoPagamento()->getDescricao() == "CREDIÁRIO") {
-                // do nothing
-                echo "asdjashdjkhasdasd";
+                $venda->setValorTotal(
+                    $venda->getValorTotal() + $venda->getValorTotal() * 0.05
+                );
+                $venda->setCrediario(true);
             }
         }
     }

@@ -9,6 +9,7 @@
     use Comercio\Api\models\Venda;
     use Comercio\Api\models\Cliente;
     use Comercio\Api\models\ItemVenda;
+    use Comercio\Api\models\Crediario;
     use Comercio\Api\utils\SingletonConexao;
     use Comercio\Api\utils\Funcoes;
     use Exception;
@@ -211,6 +212,17 @@
 
             $conexao = SingletonConexao::getInstancia();
             $success = $venda->Adicionar($conexao);
+            
+            if($venda->getCrediario()) {
+                $crediario = new Crediario(
+                    0,
+                    $venda->getCliente(),
+                    $venda,
+                    $venda->getValorTotal()
+                );
+                $conexao = SingletonConexao::getInstancia();
+                $crediario->Adicionar($conexao);
+            }
             // SingletonConexao::getInstancia()->fecharConexao();
             
             if(!$success) {
