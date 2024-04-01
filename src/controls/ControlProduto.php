@@ -111,6 +111,7 @@
             // $conexao = Singleton::getConexao();
             $conexao = SingletonConexao::getInstancia();
             $success = $produto->Adicionar($conexao);
+            SingletonConexao::getInstancia()->persistir();
             SingletonConexao::getInstancia()->fecharConexao();
             // Singleton::fecharConexao();
             if($success) {
@@ -145,6 +146,7 @@
             // $conexao = Singleton::getConexao();
             $conexao = SingletonConexao::getInstancia();
             $success = $produto->Alterar($conexao);
+            SingletonConexao::getInstancia()->persistir();
             SingletonConexao::getInstancia()->fecharConexao();
             // Singleton::fecharConexao();
 
@@ -172,6 +174,7 @@
             // $conexao = Singleton::getConexao();
             $conexao = SingletonConexao::getInstancia();
             $success = $produto->Deletar($codigoProduto, $conexao);
+            SingletonConexao::getInstancia()->persistir();
             SingletonConexao::getInstancia()->fecharConexao();
             // Singleton::fecharConexao();
             

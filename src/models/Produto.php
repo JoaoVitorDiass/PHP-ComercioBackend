@@ -80,10 +80,12 @@
         {
             return $this->_quantidadeEstoque;
         }
-        function setQuantidadeEstoque(int $quantidadeEstoque,  bool $flagRepository=true): void
+        function setQuantidadeEstoque(int $quantidadeEstoque,  bool $flagRepository=true, array &$retorno=array()): void
         {
             $this->_quantidadeEstoque = $quantidadeEstoque;
-            if($flagRepository == true && $this->_quantidadeEstoque <= $this->_estoqueMinimo) {
+            if($flagRepository == false && $this->_quantidadeEstoque <= $this->_estoqueMinimo) {
+                // DO NOTHING
+                $retorno["menssage"][] = "Fornecedores foram notificados que o produto ".$this->getDescricao()." está com o estoque baixo";
                 $this->notify(); 
             }
         }

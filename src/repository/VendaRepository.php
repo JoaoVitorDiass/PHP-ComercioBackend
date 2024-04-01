@@ -28,7 +28,7 @@
                 $row = $conexao->buscar($sql);
                 
                 $venda->setCliente(new Cliente($row["CODIGO_CLIENTE"]));
-                $venda->setValorTotal($row["VALOR_TOTAL"]);
+                $venda->setValorTotal((float)str_replace(",",".",str_replace(".","",$row["VALOR_TOTAL"])));
                 $venda->setMetodoPagamento(new MetodoPagamento($row["CODIGO_METODO_PAGAMENTO"]));
             }
             catch ( Exception $e) {
@@ -52,7 +52,7 @@
                     $venda = new Venda(
                         $row["CODIGO"],
                         new Cliente($row["CODIGO_CLIENTE"]),
-                        $row["VALOR_TOTAL"],
+                        (float)str_replace(",",".",str_replace(".","",$row["VALOR_TOTAL"])),
                         new MetodoPagamento($row["CODIGO_METODO_PAGAMENTO"]) 
                     );
                     array_push($arr, $venda);

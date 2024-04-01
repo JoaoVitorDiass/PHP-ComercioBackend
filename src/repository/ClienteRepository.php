@@ -31,7 +31,7 @@
                 $cliente->setCodigo($row["CODIGO"]);
                 $cliente->setNome($row["NOME"]);
                 $cliente->setCpf($row["CPF"]);
-                $cliente->setDataNascimento($row["DATA_NASCIMENTO"]);
+                $cliente->setDataNascimento(Datetime::createFromFormat("d/m/Y",$row["DATA_NASCIMENTO"]));
                 $cliente->setTelefone($row["TELEFONE"]);
                 $cliente->setRg($row["RG"]);
                 $cliente->setEmail($row["EMAIL"]);

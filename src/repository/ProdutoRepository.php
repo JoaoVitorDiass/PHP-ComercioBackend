@@ -31,7 +31,7 @@
                 $produto->setDescricao($row["DESCRICAO"]);
                 $produto->setValorCusto((float)str_replace(",",".",str_replace(".","",$row["VALOR_CUSTO"])));
                 $produto->setValorVenda((float)str_replace(",",".",str_replace(".","",$row["VALOR_VENDA"])));
-                $produto->setQuantidadeEstoque($row["QUANTIDADE_ESTOQUE"], false);
+                $produto->setQuantidadeEstoque($row["QUANTIDADE_ESTOQUE"]);
                 $produto->setEstoqueMinimo($row["ESTOQUE_MINIMO"]);
                 $produto->setFornecedor(new Fornecedor($row["CODIGO_FORNECEDOR"]));
                 // echo $sql; exit;

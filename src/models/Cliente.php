@@ -55,9 +55,9 @@
         {
             return $this->_nome;
         }
-        function setNome(int $nomePessoa) : void
+        function setNome(string $nome) : void
         {
-            $this->_nomePessoa = $nomePessoa;
+            $this->_nome = $nome;
         }
         function getCpf() : string
         {

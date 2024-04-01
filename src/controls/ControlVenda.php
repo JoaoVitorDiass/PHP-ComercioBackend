@@ -45,7 +45,7 @@
                 SingletonConexao::getInstancia()->fecharConexao();
                 // Singleton::fecharConexao();
 
-                $produtos = array();
+                $itemsVenda = array();
                 foreach( $venda->getItensVenda() as &$itemVenda) {
 
                     // $conexao = Singleton::getConexao();
@@ -54,22 +54,27 @@
                     SingletonConexao::getInstancia()->fecharConexao();
                     // Singleton::fecharConexao();
 
-                    $produtos[] = [
-                        "codigo"             => $itemVenda->getProduto()->getCodigo(),
-                        "descricao"          => $itemVenda->getProduto()->getDescricao(),
-                        "valorCusto"         => $itemVenda->getProduto()->getValorCusto(),
-                        "valorVenda"         => $itemVenda->getProduto()->getValorVenda(),
-                        "quantidadeEstoque"  => $itemVenda->getProduto()->getQuantidadeEstoque(),
-                        "estoqueMinimo"      => $itemVenda->getProduto()->getEstoqueMinimo(),
-                        "fornecedor"         => $itemVenda->getProduto()->getFornecedor()->getCodigo(),
+                    $itemsVenda[] = [
+                        "codigoItem" => $itemVenda->getCodigo(),
+                        "quantidade" => $itemVenda->getQuantidade(),
+                        "produto"    =>  [
+                                            "codigo"             => $itemVenda->getProduto()->getCodigo(),
+                                            "descricao"          => $itemVenda->getProduto()->getDescricao(),
+                                            "valorCusto"         => $itemVenda->getProduto()->getValorCusto(),
+                                            "valorVenda"         => $itemVenda->getProduto()->getValorVenda(),
+                                            "quantidadeEstoque"  => $itemVenda->getProduto()->getQuantidadeEstoque(),
+                                            "estoqueMinimo"      => $itemVenda->getProduto()->getEstoqueMinimo(),
+                                            "fornecedor"         => $itemVenda->getProduto()->getFornecedor()->getCodigo(),
+                        ],
                     ];
                 }
                 $retorno['menssage'][] = "Listando Venda ...";
                 $retorno['data'][] = [
                     "codigo" => $venda->getCodigo(),
                     "codigoCliente"=> $venda->getCliente()->getCodigo(),
+                    "codigoMetodoPagamento"=> $venda->getMetodoPagamento()->getCodigo(),
                     "valorTotal" => (float)$venda->getValorTotal(),
-                    "items" => $produtos,
+                    "items" => $itemsVenda,
                 ];
             }
             http_response_code(200);
@@ -119,10 +124,15 @@
                             "fornecedor"         => $itemVenda->getProduto()->getFornecedor()->getCodigo(),
                         ];
                     }
+
+                    $conexao = SingletonConexao::getInstancia();
+                    $vendas = $venda->getCliente()->buscar($conexao);
+                    SingletonConexao::getInstancia()->fecharConexao();
+                    
                     $retorno['data'][] = [
                         "codigo" => $venda->getCodigo(),
-                        "codigoCliente"=> $venda->getCliente()->getCodigo(),
-                        "valorTotal" => $venda->getValorTotal(),
+                        "cliente"=> $venda->getCliente()->getNome(),
+                        "valorTotal" => number_format($venda->getValorTotal(),2,",","."),
                         "items" => $produtos,
                     ];
                 }
@@ -139,20 +149,6 @@
         header('Content-Type: Application/json');
         return json_encode($retorno);
     }
-
-    /*
-    data = {
-        "codigo": 0,
-        "codigoCliente": 0,
-        "items": [
-            {
-                "codigoProduto": 0,
-                "quantidade": 1,
-            },
-        ]
-    }
-    */
-
     function Adicionar($data) {
         $retorno = Funcoes::getRetorno();
         try {
@@ -185,14 +181,14 @@
                 // SingletonConexao::getInstancia()->fecharConexao();
 
                 if( ($itemVenda->getProduto()->getQuantidadeEstoque() - $item["quantidade"]) < 0) {
-                    throw new Exception("Não foi possivel realizar a venda... Não há quantidade em estoque o suficiente para o produto: ".$itemVenda->getProduto()->getDescricao());
+                    throw new Exception("Não há quantidade em estoque o suficiente para o produto: ".$itemVenda->getProduto()->getDescricao());
                 }
                 $conexao = SingletonConexao::getInstancia();
                 $itemVenda->getProduto()->getFornecedor()->Buscar($conexao);
                 // SingletonConexao::getInstancia()->fecharConexao();
                 
                 $itemVenda->getProduto()->attach($itemVenda->getProduto()->getFornecedor());
-                $itemVenda->getProduto()->setQuantidadeEstoque($itemVenda->getProduto()->getQuantidadeEstoque()-$item["quantidade"]);
+                $itemVenda->getProduto()->setQuantidadeEstoque($itemVenda->getProduto()->getQuantidadeEstoque()-$item["quantidade"], false, $retorno);
 
                 $conexao = SingletonConexao::getInstancia();
                 $success = $itemVenda->getProduto()->Alterar($conexao);
@@ -239,17 +235,14 @@
                     throw new Exception("Não foi possivel realizar a venda... Erro ao persistir a item da venda: ".$itemVenda->getProduto()->getDescricao());
                 }
             }
+            // $notificacoes = new Notificacoes();
+            // $conexao = SingletonConexao::getInstancia();
+            // $arrNotificacoes = $notificacoes->BuscarTodosByVenda($venda,$conexao);
+            // $notificacoes->DeletarByVenda($venda,$conexao);
 
-            $notificacoes = new Notificacoes();
-
-            
-            $conexao = SingletonConexao::getInstancia();
-            $arrNotificacoes = $notificacoes->BuscarTodosByVenda($venda,$conexao);
-            $notificacoes->DeletarByVenda($venda,$conexao);
-
-            foreach($arrNotificacoes as $notificacao) {
-                $retorno["menssage"][] = $notificacao->getMensagem();
-            }
+            // foreach($arrNotificacoes as $notificacao) {
+            //     $retorno["menssage"][] = $notificacao->getMensagem();
+            // }
             SingletonConexao::getInstancia()->persistir();
             SingletonConexao::getInstancia()->fecharConexao();
             http_response_code(201);
@@ -301,6 +294,7 @@
 
             $conexao = SingletonConexao::getInstancia();
             $success = $venda->Deletar($codigoVenda, $conexao);
+            SingletonConexao::getInstancia()->persistir();
             SingletonConexao::getInstancia()->fecharConexao();
             
             if($success) {
@@ -338,9 +332,9 @@
             echo Adicionar(Funcoes::getData());
         break;
 
-        // case "DELETE":
-        //     echo Deletar($_GET["codigo"]);
-        //     break;
+        case "DELETE":
+            echo Deletar($_GET["codigo"]);
+            break;
 
         // case "PUT":
         //     break;
