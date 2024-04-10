@@ -13,7 +13,7 @@
     header("Access-Control-Allow-Methods: POST, GET, PATCH, DELETE, PUT, OPTIONS");
     header("Access-Control-Allow-Headers: Content-Type");
 
-    // error_reporting(0);
+    error_reporting(0);
     function buscarTodos() {
 
         $retorno = Funcoes::getRetorno();

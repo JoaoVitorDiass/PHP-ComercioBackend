@@ -19,7 +19,7 @@
     header("Access-Control-Allow-Methods: POST, GET, PATCH, DELETE, PUT, OPTIONS");
     header("Access-Control-Allow-Headers: Content-Type");
 
-    // error_reporting(0);
+    error_reporting(0);
 
     function buscar($codigoVenda) {
 
@@ -301,7 +301,7 @@
                 http_response_code(200);
             }
             else {
-                throw new Exception("Erro ao alterar o usuário ...");
+                throw new Exception("Erro ao excluir venda ...");
             }
         }
         catch (Exception $e)
