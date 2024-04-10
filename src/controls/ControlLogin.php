@@ -56,5 +56,15 @@
             if ( isset($_POST["login"]) && isset($_POST["senha"]) ) {
                 echo ValidaLogin($_POST["login"], $_POST["senha"]);
             }
+            else {
+
+                $data = Funcoes::getData();
+                if ( isset($data["login"]) && isset($data["senha"]) ) {
+                    echo ValidaLogin($data["login"], $data["senha"]);
+                }
+                else {
+                    echo "a";
+                }
+            }
         break;
     }
