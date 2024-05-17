@@ -132,6 +132,7 @@
                 $sql = str_replace(":quantidadeEstoque", $produto->getQuantidadeEstoque(), $sql);
                 $sql = str_replace(":estoqueMinimo", $produto->getEstoqueMinimo(), $sql);
                 $sql = str_replace(":codigoProduto", $produto->getCodigo(), $sql);
+                
                 $success = $conexao->executar($sql);
             }
             catch ( Exception $e) {

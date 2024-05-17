@@ -9,11 +9,11 @@
         private $conexao;
 
         private function __construct() {
-            $this->conexao = oci_connect('262113651', '262113651', '177.131.33.17/XE', 'AL32UTF8');
-            if (!$this->conexao) {
-                $erro = oci_error();
-                die("Erro na conexão com o banco de dados Oracle: " . $erro['message']);
-            }
+            // $this->conexao = oci_connect('262113651', '262113651', '177.131.33.17/XE', 'AL32UTF8');
+            // if (!$this->conexao) {
+            //     $erro = oci_error();
+            //     die("Erro na conexão com o banco de dados Oracle: " . $erro['message']);
+            // }
         }
         // Evita a clonagem da instância
         private function __clone() {}
@@ -26,7 +26,7 @@
             if (self::$instancia === null) {
                 self::$instancia = new self();
             }
-            if(self::$instancia->conexao) {
+            if(!self::$instancia->conexao) {
                 self::$instancia->conexao = oci_connect('262113651', '262113651', '177.131.33.17/XE', 'AL32UTF8');
                 if (!self::$instancia->conexao) {
                     $erro = oci_error();
